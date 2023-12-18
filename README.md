@@ -10,7 +10,10 @@ Afin de pouvoir développer sur le projet, il faut avoir au préalable installer
 
  - NodeJS (20.10.0 - LTS)
  - Outil en invite de commande [NativeScript CLI](https://docs.nativescript.org/setup/linux)
- - JDK [(Java Development Kit 21)](https://www.oracle.com/fr/java/technologies/downloads/)
+ - JDK [(Java Development Kit)](https://www.oracle.com/fr/java/technologies/downloads/)
+ ```bash
+ sudo apt-get install -y openjdk-14-jdk
+ ```
  - [Android Studio](https://developer.android.com/studio) (requis pour l'application native Android)
 
 ## Installation
