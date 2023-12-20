@@ -1,28 +1,46 @@
 # NurseCareApp
 
-## Description
+This template should help get you started developing with Vue 3 in Vite.
 
-Voici le *(futur)* client de l'application NurseCare. L'application adoptera la forme d'une PWA (Progressive Web App) hybride, avec la possibilité d'en faire une application mobile utilisant le framework [NativeScript](https://nativescript.org/)
+## Recommended IDE Setup
 
-## Prérequis
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-Afin de pouvoir développer sur le projet, il faut avoir au préalable installer les éléments suivants :
+## Type Support for `.vue` Imports in TS
 
- - NodeJS (20.10.0 - LTS)
- - Outil en invite de commande [NativeScript CLI](https://docs.nativescript.org/setup/linux)
- - JDK [(Java Development Kit)](https://www.oracle.com/fr/java/technologies/downloads/)
- ```bash
- sudo apt-get install -y openjdk-14-jdk
- ```
- - [Android Studio](https://developer.android.com/studio) (requis pour l'application native Android)
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
-## Installation
+If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
-Une fois `node` et `npm` installés, exécutez les commandes :
+1. Disable the built-in TypeScript Extension
+   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
+   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
+2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-```bash
-npm install -g nativescript
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
 npm install
 ```
 
-WIP
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
