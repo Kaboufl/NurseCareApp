@@ -4,14 +4,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Colortube';
+  src:
+    url('./fonts/colortube-regular-webfont.woff2') format('woff2'),
+    url('./fonts/colortube-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src:
+    url('./fonts/nunito-variablefont_wght-webfont.woff2') format('woff2'),
+    url('./fonts/nunito-variablefont_wght-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  height: 100%;
   font-weight: normal;
 }
 
-a,
 .green {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);

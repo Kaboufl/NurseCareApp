@@ -5,9 +5,12 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  server: {
+    hmr: {
+      host: '192.168.1.170'
+    }
+  },
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
