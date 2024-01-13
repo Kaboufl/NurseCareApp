@@ -26,10 +26,22 @@ const isOpen = ref(false)
     </button>
   </header>
 
-  <div class="drawer-menu" v-bind:class="{ drawerOpen: isOpen }" v-on:click="">
+  <div class="drawer-menu" v-bind:class="{ drawerOpen: isOpen }">
     <div class="drawer-wrapper">
-      <button type="submit" class="profile-button">Mon compte</button>
-      <button type="submit" class="disconnect-button">Déconnexion</button>
+      <button class="close-btn" @click="isOpen = !isOpen">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <button type="submit" class="drawer-btn profile-button">Mon compte</button>
+      <button type="submit" class="drawer-btn disconnect-button">Déconnexion</button>
     </div>
   </div>
 </template>
@@ -70,6 +82,7 @@ header {
 .drawer-wrapper {
   width: 90vw;
   height: 100dvh;
+  position: relative;
   background-color: transparent;
   border-radius: 0.5rem;
   padding: 1.25rem;
@@ -80,7 +93,7 @@ header {
   gap: 0.625rem;
 }
 
-.drawer-wrapper button {
+.drawer-btn {
   width: 100%;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -90,6 +103,14 @@ header {
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
   text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  height: fit-content;
+  width: fit-content;
 }
 
 .disconnect-button {
