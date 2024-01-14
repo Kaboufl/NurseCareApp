@@ -27,6 +27,7 @@ const router = createRouter({
         if (!localStorage.getItem('token')) {
           return next({ name: 'Connexion' })
         }
+        next()
       },
       children: [
         {
