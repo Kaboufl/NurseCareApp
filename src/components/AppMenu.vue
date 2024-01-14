@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import router from '@/router'
 import { ref } from 'vue'
 
 const isOpen = ref(false)
+
+const logOut = ref(() => {
+  localStorage.removeItem('token')
+  router.push('/')
+})
 </script>
 
 <template>
@@ -41,7 +47,9 @@ const isOpen = ref(false)
         </svg>
       </button>
       <button type="submit" class="drawer-btn profile-button">Mon compte</button>
-      <button type="submit" class="drawer-btn disconnect-button">Déconnexion</button>
+      <button type="submit" class="drawer-btn disconnect-button" @click="logOut">
+        Déconnexion
+      </button>
     </div>
   </div>
 </template>
