@@ -8,6 +8,13 @@ export default defineConfig({
   server: {
     hmr: {
       host: '192.168.1.170'
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     }
   },
   plugins: [vue()],
