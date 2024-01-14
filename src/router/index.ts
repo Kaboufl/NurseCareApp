@@ -23,6 +23,11 @@ const router = createRouter({
     {
       path: '/aide-soignant',
       component: ASHome,
+      beforeEnter: (to, from, next) => {
+        if (!localStorage.getItem('token')) {
+          return next({ name: 'Connexion' })
+        }
+      },
       children: [
         {
           path: '',
