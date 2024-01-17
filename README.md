@@ -13,8 +13,8 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
 1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
+   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
+   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
 ## Customize configuration
@@ -44,3 +44,16 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## Comment travailler sur le projet ?
+
+La branche `main` du projet est la branche supposée être la plus stable, constituant ainsi une base saine avec laquelle partir pour développer une nouvelle fonctionnalité :
+
+- Assurez vous d'avoir récupéré les dernières modifications (avec un `git pull`)
+- Créez une nouvelle branche `git checkout -b <votre-nom-de-branche>`
+- Une fois vos modifications faites (ainsi que vos commits), répliquez votre branche sur github `git push --set-upstream origin <votre-nom-de-branche>`
+- Une fois votre fonctionnalitée prête, vous pouvez intégrer vos changements à la branche `main` :
+  - Mettez vous sur la branche main `git checkout main`
+  - Récupérez vos changements sur votre branche `git pull origin <votre-nom-de-branche>`
+  - Résolvez d'éventuels conflits
+  - Poussez vos modifications
