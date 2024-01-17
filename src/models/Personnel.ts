@@ -1,4 +1,4 @@
-export default interface AideSoignant {
+export default interface Personnel {
   id: number
   nom: string
   prenom: string

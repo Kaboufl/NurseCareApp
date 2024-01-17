@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   server: {
     hmr: {
-      host: '192.168.1.170'
+      host: 'localhost'
     },
     proxy: {
       '/api': {

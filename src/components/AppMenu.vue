@@ -81,6 +81,7 @@ header {
   transition: all ease-in-out 0.65s;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 20;
 }
 
 .drawerOpen {

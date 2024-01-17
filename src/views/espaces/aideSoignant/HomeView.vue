@@ -1,26 +1,36 @@
 <script setup lang="ts">
 import AppMenu from '/src/components/AppMenu.vue'
-import AideSoignant from '/src/models/aideSoignant'
-import { ref } from 'vue'
+import AideSoignant from '/src/models/Personnel'
+import { provide, ref, type Ref } from 'vue'
 
-const userProfile: ref<AideSoignant> = ref({
+const userProfile: Ref<AideSoignant> = ref({
   id: 0,
-  nom: '',
-  prenom: '',
-  email: '',
-  password: '',
-  adresse: '',
-  telephone: '',
+  nom: 'nomtest',
+  prenom: 'prenom test',
+  email: 'test@nurse.care',
+  password: 'test',
+  adresse: '20 rue des potiers',
+  telephone: '0123456789',
   role: 'aideSoignant'
 })
 
-console.log(userProfile.value)
+provide('userProfile', userProfile.value)
 </script>
 
 <template>
   <AppMenu />
 
-  <router-view msg="Profil aide soignant"></router-view>
+  <main>
+    <router-view></router-view>
+  </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  height: 90svh;
+  width: 100%;
+  padding: 1.075rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+</style>
