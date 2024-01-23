@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import AppMenu from '/src/components/AppMenu.vue'
-import AideSoignant from '/src/models/Personnel'
+import AppMenu from '@/components/AppMenu.vue'
+import type Personnel from '@/models/Personnel'
 import { provide, ref, type Ref } from 'vue'
 
-const userProfile: Ref<AideSoignant> = ref({
+const userProfile: Ref<Personnel> = ref({
   id: 0,
-  nom: 'nomtest',
-  prenom: 'prenom test',
-  email: 'test@nurse.care',
-  password: 'test',
-  adresse: '20 rue des potiers',
-  telephone: '0123456789',
-  role: 'aideSoignant'
+  nom: 'Valgean',
+  prenom: 'Jean',
+  email: 'jean.valgean@jean.jean',
+  password: '1234',
+  
 })
 
 provide('userProfile', userProfile.value)
