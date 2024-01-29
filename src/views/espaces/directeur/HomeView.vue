@@ -10,17 +10,29 @@ const userProfile: Ref<Partial<Personnel>> = ref({
   prenom: 'Jean',
   email: 'jean.valgean@jean.jean',
   password: '1234',
-  role: 3
+  role: 1,
 })
 
 const routes: RouteItem[] = [
   {
     label: "Tableau de Bord",
-    route: 'dashboard',
+    route: '/directeur',
+  },
+  {
+    label: "Personnel Soignant",
+    route: ''
+  },
+  {
+    label: "Personnel Administratif",
+    route: ''
   },
   {
     label: "Factures",
-    route: 'factures'
+    route: ''
+  },
+  {
+    label: "Stagiaires",
+    route: ''
   },
 ]
 

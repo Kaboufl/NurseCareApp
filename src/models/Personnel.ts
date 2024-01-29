@@ -1,9 +1,7 @@
 export default interface Personnel {
-  id: number
   nom: string
   prenom: string
   email: string
-  password: string
   telephone: string
   adresse: string
   ville: string
@@ -11,6 +9,6 @@ export default interface Personnel {
   pays: string
   dateNaissance: string
   dateEmbauche: string
-  role: string
+  role: number
   token: string
 }

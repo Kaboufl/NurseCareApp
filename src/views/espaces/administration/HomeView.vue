@@ -10,7 +10,7 @@ const userProfile: Ref<Partial<Personnel>> = ref({
   prenom: 'Jean',
   email: 'jean.valgean@jean.jean',
   password: '1234',
-  role: 3
+  role: 2,
 })
 
 const routes: RouteItem[] = [
@@ -19,8 +19,16 @@ const routes: RouteItem[] = [
     route: 'dashboard',
   },
   {
+    label: "Personnel Soignant",
+    route: ''
+  },
+  {
+    label: "Patients",
+    route: ''
+  },
+  {
     label: "Factures",
-    route: 'factures'
+    route: ''
   },
 ]
 
