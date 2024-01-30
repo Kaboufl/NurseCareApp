@@ -1,4 +1,6 @@
 export interface RouteItem {
+    role?: string;
     label: string;
-    route: string;
+    name: string;
+    path: string;
 }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import router from '@/router'
 import { ref } from 'vue'
-import routes from '@/views/espaces/administration/HomeView.vue'
 
 const isOpen = ref(false)
 
@@ -9,6 +8,8 @@ const logOut = ref(() => {
   localStorage.removeItem('token')
   router.push('/')
 })
+
+const routes = router.getRoutes()
 
 </script>
 
@@ -32,12 +33,8 @@ const logOut = ref(() => {
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-      <ul>
-        <RouterLink v-for="RouteItem in routes" :key="RouteItem.route" :route="RouteItem.route" :label="RouteItem.label"
-          :to="{ name: '{{ RouteItems.route }}' }" class="drawer-btn">
-          {{ RouteItem.label }}
-        </RouterLink>
-      </ul>
+      <RouterLink v-for="route in routes" :key="route.path" :route="route.path" :label="route.name"
+        :to="{ name: route.name }" class="drawer-btn profile-button"> {{ route.name }}</RouterLink>
       <button type="submit" class="drawer-btn profile-button">Mon compte</button>
       <button type="submit" class="drawer-btn disconnect-button" @click="logOut">Déconnexion</button>
     </div>
@@ -119,6 +116,7 @@ header {
 
 .profile-button {
   color: #000;
+  border: 1px solid black;
   background: #fff;
   margin-top: auto;
 }

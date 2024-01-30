@@ -58,22 +58,22 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'dashboard',
+          name: 'Dashboard',
           component: AdminDashboard
         },
         {
-          path: 'personnel-soignant',
-          name: 'personnel-soignant',
+          path: '/personnel-soignant',
+          name: 'Personnel Soignant',
           component: AdminPersonnel,
         },
         {
-          path: 'patients',
-          name:'patients',
+          path: '/patients',
+          name:'Patients',
           component: AdminPatients,
         },
         {
-          path: 'factures',
-          name:'factures',
+          path: '/factures',
+          name:'Factures',
           component: AdminFactures,
         }
       ]

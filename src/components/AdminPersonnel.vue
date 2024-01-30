@@ -10,7 +10,7 @@ console.log(userProfile)
 
 <template>
   <div class="w-full h-fit bg-white rounded-md p-2">
-    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
+    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }} page personnel</h2>
     <DailyAgenda />
   </div>
 </template>
