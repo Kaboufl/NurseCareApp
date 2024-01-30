@@ -24,7 +24,7 @@ const router = createRouter({
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
+        if (!localStorage.getItem('token')) {
           return next({ name: 'Connexion' })
         }
         next()
@@ -32,7 +32,8 @@ const router = createRouter({
       children: [
         {
           path: '',
-          component: ASDashboard
+          component: ASDashboard,
+          name: 'ASDashboard'
         }
       ]
     }
