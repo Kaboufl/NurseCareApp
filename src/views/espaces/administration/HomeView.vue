@@ -20,20 +20,22 @@ const routes: RouteItem[] = [
   },
   {
     label: "Personnel Soignant",
-    route: ''
+    route: 'personnel-soignant'
   },
   {
     label: "Patients",
-    route: ''
+    route: 'patients'
   },
   {
     label: "Factures",
-    route: ''
+    route: 'factures'
   },
 ]
 
 provide('userProfile', userProfile.value)
+
 </script>
+
 
 <template>
   <AppMenu />

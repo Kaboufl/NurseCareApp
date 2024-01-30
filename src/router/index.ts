@@ -2,10 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginForm from '@/components/LoginForm.vue'
 import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
-import AdminHome from '@/views/espaces/administration/HomeView.vue'
-import DirHome from '@/views/espaces/directeur/HomeView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
+import AdminHome from '@/views/espaces/administration/HomeView.vue'
 import AdminDashboard from '@/components/ASDashboard.vue'
+import AdminFactures from '@/components/AdminFactures.vue'
+import AdminPatients from '@/components/AdminPatients.vue'
+import AdminPersonnel from '@/components/AdminPersonnel.vue'
+import DirHome from '@/views/espaces/directeur/HomeView.vue'
 import DirDashboard from '@/components/ASDashboard.vue'
 
 const router = createRouter({
@@ -55,7 +58,23 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'dashboard',
           component: AdminDashboard
+        },
+        {
+          path: 'personnel-soignant',
+          name: 'personnel-soignant',
+          component: AdminPersonnel,
+        },
+        {
+          path: 'patients',
+          name:'patients',
+          component: AdminPatients,
+        },
+        {
+          path: 'factures',
+          name:'factures',
+          component: AdminFactures,
         }
       ]
     },
@@ -72,6 +91,7 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'dashboard',
           component: DirDashboard
         }
       ]
