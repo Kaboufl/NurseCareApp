@@ -31,4 +31,8 @@ main {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+main::-webkit-scrollbar {
+  display: none;
+}
 </style>

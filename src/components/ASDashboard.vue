@@ -100,7 +100,7 @@ const config = ref({
 </script>
 
 <template>
-  <div class="w-full h-fit bg-white rounded-md p-2">
+  <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
     <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
     <div class="is-light-mode">
       <Qalendar :config="config" :events="events">
