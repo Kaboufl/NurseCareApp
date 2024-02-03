@@ -12,11 +12,17 @@
 <style scoped>
 main {
   position: relative;
-  min-height: 100dvh;
+  height: 100dvh;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+main::-webkit-scrollbar {
+  display: none;
 }
 
 h1 {

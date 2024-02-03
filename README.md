@@ -49,11 +49,12 @@ npm run lint
 
 La branche `main` du projet est la branche supposée être la plus stable, constituant ainsi une base saine avec laquelle partir pour développer une nouvelle fonctionnalité :
 
-- Assurez vous d'avoir récupéré les dernières modifications (avec un `git pull`)
+- Assurez vous d'avoir récupéré les dernières modifications (avec un `git fetch --all` puis `git pull`)
 - Créez une nouvelle branche `git checkout -b <votre-nom-de-branche>`
-- Une fois vos modifications faites (ainsi que vos commits), répliquez votre branche sur github `git push --set-upstream origin <votre-nom-de-branche>`
+- Une fois vos modifications faites (ainsi que vos commits), répliquez votre branche sur github `git push -u origin <votre-nom-de-branche>`
 - Une fois votre fonctionnalitée prête, vous pouvez intégrer vos changements à la branche `main` :
-  - Mettez vous sur la branche main `git checkout main`
-  - Récupérez vos changements sur votre branche `git pull origin <votre-nom-de-branche>`
-  - Résolvez d'éventuels conflits
-  - Poussez vos modifications
+  - Rendez vous sur le [GitHub du projet](https://github.com/Kaboufl/NurseCare)
+  - Créez une nouvelle pull request ( `main <-- <votre-branche>` )
+  - Commentez vos changements
+  - Chaque merge devra etre approuvé par chacun de nous
+  - _Rinse and repeat_

@@ -31,14 +31,16 @@ const parseDateQalendar = (dateStr: string) => {
 
 const events = computed(() => {
   return interventions.value.map((intervention: any) => {
-    console.log(intervention)
     return {
       title: intervention.patient.nom,
       time: parseDateQalendar(intervention.date),
       color: 'green',
       isEditable: false,
+      isCustom: false,
       id: intervention.id,
-      description: `${intervention.prestations.length} prestation(s)`
+      description: `${intervention.prestations.length} prestation(s)`,
+      prestations: intervention.prestations,
+      patient: intervention.patient
     }
   })
 })
@@ -89,34 +91,54 @@ const config = ref({
   // Please note, that only day and month modes are available for the calendar in mobile-sized wrappers (~700px wide or less, depending on your root font-size)
   defaultMode: 'day',
   // The silent flag can be added, to disable the development warnings. This will also bring a slight performance boost
-  isSilent: true,
+  isSilent: false,
   showCurrentTime: true, // Display a line indicating the current time
   disableModes: 'month',
   dayBoundaries: {
     start: 7,
     end: 19
+  },
+  eventDialog: {
+    isCustom: true
   }
 })
 </script>
 
 <template>
-  <div class="w-full h-fit bg-white rounded-md p-2">
+  <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
     <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
     <div class="is-light-mode">
       <Qalendar :config="config" :events="events">
-        <template #weekDayEvent="eventProps">
-          <div
-            :style="{
-              backgroundColor: 'cornflowerblue',
-              color: '#fff',
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden'
-            }"
-          >
-            <span>{{ eventProps.eventData.time }}</span>
-
-            <span>{{ eventProps.eventData.title }}</span>
+        <template #eventDialog="props">
+          <div v-if="props.eventDialogData && props.eventDialogData.title" class="p-3">
+            <header class="w-full flex flex-row justify-between items-center mb-2">
+              <span><b>Patient : </b>{{ props.eventDialogData.patient.nom }}</span>
+              <button class="" @click="props.closeEventDialog">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </header>
+            <main class="w-full h-fit grid grid-cols-[3fr_2fr] grid-rows-[auto_1fr]">
+              <span
+                >{{ props.eventDialogData.prestations.length }} prestation{{
+                  props.eventDialogData.prestations.length > 1 ? 's' : ''
+                }}
+                à réaliser</span
+              >
+              <ul class="row-start-2 col-start-1 pl-4 py-2">
+                <li v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
+                  {{ prestation.soin.libelle }}
+                </li>
+              </ul>
+            </main>
           </div>
         </template>
       </Qalendar>
