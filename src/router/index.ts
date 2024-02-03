@@ -40,7 +40,7 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'dashboard',
+          name: 'Dashboard',
           component: ASDashboard
         }
       ]
@@ -91,7 +91,7 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'dashboard',
+          name: 'Dashboard',
           component: DirDashboard
         }
       ]
