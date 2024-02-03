@@ -55,17 +55,17 @@ const login = async () => {
       switch (response.role.id) {
         case 1:
           provide('parent', "/directeur")
-          router.push({ name: 'DirDashboard' })
+          router.push({ name: 'DirHome' })
           break
 
         case 2:
           provide('parent', "/administration")
-          router.push({ name: 'AdminDashboard' })
+          router.push({ name: 'AdminHome' })
           break
 
         case 3:
           provide('parent', "/aide-soignant")
-          router.push({ name: 'ASDashboard' })
+          router.push({ name: 'ASHome' })
           break
 
         default:

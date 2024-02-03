@@ -29,9 +29,10 @@ const router = createRouter({
     },
     {
       path: '/aide-soignant',
+      name: 'ASHome',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (localStorage.getItem('token') && localStorage.getItem('role') == '3' || true){
+        if (localStorage.getItem('token') && localStorage.getItem('role') == '3'){
           next()
         } else {
           return next({ name: 'Connexion'})
@@ -47,9 +48,10 @@ const router = createRouter({
     },
     {
       path: '/administration',
+      name:'AdminHome',
       component: AdminHome,
       beforeEnter: (to, from, next) => {
-        if (localStorage.getItem('token') && localStorage.getItem('role') == '2' || true){
+        if (localStorage.getItem('token') && localStorage.getItem('role') == '2'){
           next()
         } else {
           return next({ name: 'Connexion'})
@@ -80,9 +82,10 @@ const router = createRouter({
     },
     {
       path: '/directeur',
+      name: 'DirDashboard',
       component: DirHome,
       beforeEnter: (to, from, next) => {
-        if (localStorage.getItem('token') && localStorage.getItem('role') == '1' || true){
+        if (localStorage.getItem('token') && localStorage.getItem('role') == '1'){
           next()
         } else {
           return next({ name: 'Connexion'})

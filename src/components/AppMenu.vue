@@ -9,9 +9,9 @@ const logOut = ref(() => {
   router.push('/')
 })
 
-//const parent = inject('parent')
-//const getroute = router.getRoutes()
-//const routes = getroute.filter((route) => route.path?.startsWith(parent))
+const parent = inject('parent')
+const getroute = router.getRoutes()
+const routes = getroute.filter((route) => route.path?.startsWith(parent))
 
 </script>
 
@@ -35,9 +35,9 @@ const logOut = ref(() => {
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-      <!--<RouterLink v-for="route in routes" :key="route.path" :route="route.path" :label="route.name"
+      <RouterLink v-for="route in routes" :key="route.path" :route="route.path" :label="route.name"
         :to="{ name: route.name }" class="drawer-btn profile-button"> {{
-          route.name }}</RouterLink> -->
+          route.name }}</RouterLink>
       <button type="submit" class="drawer-btn profile-button">Mon compte</button>
       <button type="submit" class="drawer-btn disconnect-button" @click="logOut">Déconnexion</button>
     </div>
