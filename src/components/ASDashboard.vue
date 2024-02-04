@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { inject, onMounted, computed, ref } from 'vue'
+import { onMounted, computed, ref, type Ref } from 'vue'
 import type Personnel from '@/models/Personnel'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
-const userProfile: Personnel = inject('userProfile')!
-
+const userProfile: Ref<Partial<Personnel>> = ref({
+  
+  
+})
 const interventions = ref([])
 
 const parseDateQalendar = (dateStr: string) => {
@@ -52,7 +54,7 @@ onMounted(async () => {
   //console.log(userProfile)
 
   try {
-    const request = await fetch(`api/aide-soignant/interventions`, {
+    const request = await fetch(`api/aide-soignant/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -63,8 +65,17 @@ onMounted(async () => {
       throw new Error('Erreur')
     }
     const response = await request.json()
-    interventions.value = response
-    console.log(events.value)
+    console.log(response)
+    userProfile.value = {
+      id: response.id,
+      nom: response.nom,
+      prenom: response.prenom,
+      email: response.mail,
+      tel: response.tel,
+    }
+    console.log(userProfile.value)
+    interventions.value = response.interventions
+    //console.log(events.value)
   } catch (error) {
     console.log(error)
   }
