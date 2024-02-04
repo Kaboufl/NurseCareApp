@@ -33,7 +33,8 @@ const router = createRouter({
         {
           path: '',
           component: ASDashboard,
-          name: 'ASDashboard'
+          name: 'ASDashboard',
+          props: true
         }
       ]
     }
