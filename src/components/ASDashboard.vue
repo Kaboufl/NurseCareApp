@@ -102,6 +102,11 @@ const config = ref({
     isCustom: true
   }
 })
+
+function facturer() {
+
+  alert('La prestation a été facturée.')
+}
 </script>
 
 <template>
@@ -114,31 +119,27 @@ const config = ref({
             <header class="w-full flex flex-row justify-between items-center mb-2">
               <span><b>Patient : </b>{{ props.eventDialogData.patient.nom }}</span>
               <button class="" @click="props.closeEventDialog">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
               </button>
             </header>
             <main class="w-full h-fit grid grid-cols-[3fr_2fr] grid-rows-[auto_1fr]">
-              <span
-                >{{ props.eventDialogData.prestations.length }} prestation{{
-                  props.eventDialogData.prestations.length > 1 ? 's' : ''
-                }}
-                à réaliser</span
-              >
+              <span>{{ props.eventDialogData.prestations.length }} prestation{{
+                props.eventDialogData.prestations.length > 1 ? 's' : ''
+              }}
+                à réaliser</span>
               <ul class="row-start-2 col-start-1 pl-4 py-2">
                 <li v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
                   {{ prestation.soin.libelle }}
                 </li>
               </ul>
             </main>
+            <footer>
+              <button class="" @click="facturer">Facturer</button>
+              <button class="" @click="props.closeEventDialog">Bon d'observation</button>
+            </footer>
           </div>
         </template>
       </Qalendar>
