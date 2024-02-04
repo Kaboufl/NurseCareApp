@@ -3,6 +3,7 @@ import { inject, onMounted, computed, ref } from 'vue'
 import type Personnel from '@/models/Personnel'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
 const userProfile: Personnel = inject('userProfile')!
 
@@ -133,11 +134,24 @@ const config = ref({
                 }}
                 à réaliser</span
               >
-              <ul class="row-start-2 col-start-1 pl-4 py-2">
-                <li v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
-                  {{ prestation.soin.libelle }}
-                </li>
-              </ul>
+                <section  class="flex flex-col gap-2 col-span-2 row-start-2">
+                  <div v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
+                    <Disclosure as="div" class=" pl-4 py-2" v-slot="{ open }">
+                      <DisclosureButton class="flex w-full justify-between items-center rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
+                        <span>{{ prestation.soin.libelle }} - <b>{{ prestation.soin.prix }} €</b></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-purple-500" :class="open ? 'rotate-180 transform' : ''">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                        </svg>
+
+                      </DisclosureButton>
+                      <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500 flex flex-row">
+                        {{ prestation.commentaire }}
+                      </DisclosurePanel>
+                      
+                      
+                    </Disclosure>
+                  </div>
+                </section>
             </main>
           </div>
         </template>
