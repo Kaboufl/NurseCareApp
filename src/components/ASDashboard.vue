@@ -3,6 +3,8 @@ import { inject, onMounted, computed, ref } from 'vue'
 import type Personnel from '@/models/Personnel'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
+import { PDFDocument } from 'pdf-lib'
+
 
 const userProfile: Personnel = inject('userProfile')!
 
@@ -103,8 +105,12 @@ const config = ref({
   }
 })
 
-function facturer() {
-
+async function facturer() {
+  const pdfFact = await PDFDocument.create()
+  const pageFact = pdfFact.addPage()
+  pageFact.drawText('Facture très élaborée')
+  const pdfBytes = await pdfFact.save()
+  // download(pdfBytes, "FACT-ID-DATE.pdf", "application/pdf");
   alert('La prestation a été facturée.')
 }
 </script>
