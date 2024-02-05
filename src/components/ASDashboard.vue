@@ -148,9 +148,9 @@ async function facturer() {
                 props.eventDialogData.prestations.length > 1 ? 's' : ''
               }}
                 à réaliser</span>
-              <section class="flex flex-col gap-2 col-span-2 row-start-2">
+              <section class="h-[15dvh] md:h-fit overflow-y-scroll flex flex-col gap-2 col-span-2 row-start-2">
                 <div v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
-                  <Disclosure as="div" class=" pl-4 py-2" v-slot="{ open }">
+                  <Disclosure as="div" class="px-4 py-2" v-slot="{ open }">
                     <DisclosureButton
                       class="flex w-full justify-between items-center rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
                       <span>{{ prestation.soin.libelle }} - <b>{{ prestation.soin.prix }} €</b></span>
@@ -182,4 +182,8 @@ async function facturer() {
 
 <style>
 @import 'qalendar/dist/style.css';
+
+section::-webkit-scrollbar {
+  display: none;
+}
 </style>
