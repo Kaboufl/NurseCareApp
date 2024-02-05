@@ -6,8 +6,6 @@ import { Qalendar } from 'qalendar'
 import { PDFDocument } from 'pdf-lib'
 
 
-const userProfile: Personnel = inject('userProfile')!
-
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
 const userProfile: Ref<Partial<Personnel>> = ref({
@@ -125,8 +123,7 @@ async function facturer() {
   const pageFact = pdfFact.addPage()
   pageFact.drawText('Facture très élaborée')
   const pdfBytes = await pdfFact.save()
-  // download(pdfBytes, "FACT-ID-DATE.pdf", "application/pdf");
-  alert('La prestation a été facturée.')
+  // alert('La prestation a été facturée.')
 }
 </script>
 
@@ -147,15 +144,6 @@ async function facturer() {
               </button>
             </header>
             <main class="w-full h-fit grid grid-cols-[3fr_2fr] grid-rows-[auto_1fr]">
-              <span>{{ props.eventDialogData.prestations.length }} prestation{{
-                props.eventDialogData.prestations.length > 1 ? 's' : ''
-              }}
-                à réaliser</span>
-              <ul class="row-start-2 col-start-1 pl-4 py-2">
-                <li v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
-                  {{ prestation.soin.libelle }}
-                </li>
-              </ul>
               <span>{{ props.eventDialogData.prestations.length }} prestation{{
                 props.eventDialogData.prestations.length > 1 ? 's' : ''
               }}
@@ -182,8 +170,8 @@ async function facturer() {
               </section>
             </main>
             <footer>
-              <button class="" @click="facturer">Facturer</button>
-              <button class="" @click="props.closeEventDialog">Bon d'observation</button>
+              <a class="" @click="facturer">Facturer</a>
+              <a class="" @click="props.closeEventDialog">Bon d'observation</a>
             </footer>
           </div>
         </template>
