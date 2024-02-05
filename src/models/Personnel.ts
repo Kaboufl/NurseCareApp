@@ -4,7 +4,7 @@ export default interface Personnel {
   prenom: string
   email: string
   password: string
-  telephone: string
+  tel: string
   adresse: string
   ville: string
   codePostal: string

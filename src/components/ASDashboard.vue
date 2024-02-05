@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, onMounted, computed, ref } from 'vue'
+import { onMounted, computed, ref, type Ref } from 'vue'
 import type Personnel from '@/models/Personnel'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
@@ -8,6 +8,12 @@ import { PDFDocument } from 'pdf-lib'
 
 const userProfile: Personnel = inject('userProfile')!
 
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+
+const userProfile: Ref<Partial<Personnel>> = ref({
+
+
+})
 const interventions = ref([])
 
 const parseDateQalendar = (dateStr: string) => {
@@ -53,7 +59,7 @@ onMounted(async () => {
   //console.log(userProfile)
 
   try {
-    const request = await fetch(`api/aide-soignant/interventions`, {
+    const request = await fetch(`api/aide-soignant/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -64,8 +70,17 @@ onMounted(async () => {
       throw new Error('Erreur')
     }
     const response = await request.json()
-    interventions.value = response
-    console.log(events.value)
+    console.log(response)
+    userProfile.value = {
+      id: response.id,
+      nom: response.nom,
+      prenom: response.prenom,
+      email: response.mail,
+      tel: response.tel,
+    }
+    console.log(userProfile.value)
+    interventions.value = response.interventions
+    //console.log(events.value)
   } catch (error) {
     console.log(error)
   }
@@ -141,6 +156,30 @@ async function facturer() {
                   {{ prestation.soin.libelle }}
                 </li>
               </ul>
+              <span>{{ props.eventDialogData.prestations.length }} prestation{{
+                props.eventDialogData.prestations.length > 1 ? 's' : ''
+              }}
+                à réaliser</span>
+              <section class="flex flex-col gap-2 col-span-2 row-start-2">
+                <div v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
+                  <Disclosure as="div" class=" pl-4 py-2" v-slot="{ open }">
+                    <DisclosureButton
+                      class="flex w-full justify-between items-center rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
+                      <span>{{ prestation.soin.libelle }} - <b>{{ prestation.soin.prix }} €</b></span>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-purple-500" :class="open ? 'rotate-180 transform' : ''">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                      </svg>
+
+                    </DisclosureButton>
+                    <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500 flex flex-row">
+                      {{ prestation.commentaire }}
+                    </DisclosurePanel>
+
+
+                  </Disclosure>
+                </div>
+              </section>
             </main>
             <footer>
               <button class="" @click="facturer">Facturer</button>
