@@ -119,11 +119,11 @@ const config = ref({
 })
 
 async function facturer() {
-  const pdfFact = await PDFDocument.create()
-  const pageFact = pdfFact.addPage()
-  pageFact.drawText('Facture très élaborée')
-  const pdfBytes = await pdfFact.save()
-  // alert('La prestation a été facturée.')
+  //const pdfFact = await PDFDocument.create()
+  //const pageFact = pdfFact.addPage()
+  //pageFact.drawText('Facture très élaborée')
+  //const pdfBytes = await pdfFact.save()
+  //alert('La prestation a été facturée.')
 }
 </script>
 
@@ -171,7 +171,7 @@ async function facturer() {
             </main>
             <footer>
               <a class="" @click="facturer">Facturer</a>
-              <a class="" @click="props.closeEventDialog">Bon d'observation</a>
+              <!-- <a class="" @click="props.closeEventDialog">Bon d'observation</a> -->
             </footer>
           </div>
         </template>
