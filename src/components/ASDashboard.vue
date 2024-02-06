@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed, ref, type Ref } from 'vue'
+import { onMounted, inject, computed, ref, type Ref } from 'vue'
 import type Personnel from '@/models/Personnel'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
@@ -8,10 +8,11 @@ import { PDFDocument } from 'pdf-lib'
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
-const userProfile: Ref<Partial<Personnel>> = ref({
+const { userProfile } = inject('userProfile') as {
+  userProfile: Ref<Partial<Personnel>>}
 
+console.log(userProfile.value)
 
-})
 const interventions = ref([])
 
 const parseDateQalendar = (dateStr: string) => {
@@ -68,7 +69,6 @@ onMounted(async () => {
       throw new Error('Erreur')
     }
     const response = await request.json()
-    console.log(response)
     userProfile.value = {
       id: response.id,
       nom: response.nom,
@@ -76,7 +76,6 @@ onMounted(async () => {
       email: response.mail,
       tel: response.tel,
     }
-    console.log(userProfile.value)
     interventions.value = response.interventions
     //console.log(events.value)
   } catch (error) {

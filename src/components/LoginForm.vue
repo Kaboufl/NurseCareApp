@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { inject, provide, ref, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
+import type { Personnel } from "@/models"
 
 const router = useRouter()
+
+const { userProfile, updateUserProfile } = inject('userProfile') as {
+  userProfile: Ref<Partial<Personnel>>,
+  updateUserProfile: (user: Partial<Personnel>) => void
+}
 
 const error = ref({
   statut: false,
@@ -49,8 +55,8 @@ const login = async () => {
     }
     console.log(response)
     if (response.statut === 'ok') {
-      localStorage.setItem('token', response.token)
-      console.log(localStorage.getItem('token'))
+      localStorage.setItem('token', response.token)    
+      updateUserProfile(response.user)
 
       switch (response.role.id) {
         case 1:
