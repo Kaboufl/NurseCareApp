@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, computed, ref, type Ref } from 'vue'
+import { onMounted, computed, provide, ref, type Ref } from 'vue'
 import type Personnel from '@/models/Personnel'
+import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 import { PDFDocument } from 'pdf-lib'
@@ -8,11 +9,10 @@ import { PDFDocument } from 'pdf-lib'
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
-const userProfile: Ref<Partial<Personnel>> = ref({
-
-
-})
+const userProfile: Ref<Partial<Personnel>> = ref({})
 const interventions = ref([])
+
+defineEmits(["showInterventionDetail", "test"])
 
 const parseDateQalendar = (dateStr: string) => {
   const date = new Date(dateStr)
@@ -38,6 +38,7 @@ const parseDateQalendar = (dateStr: string) => {
 const events = computed(() => {
   return interventions.value.map((intervention: any) => {
     return {
+      ...intervention,
       title: intervention.patient.nom,
       time: parseDateQalendar(intervention.date),
       color: 'green',
@@ -125,13 +126,23 @@ async function facturer() {
   const pdfBytes = await pdfFact.save()
   // alert('La prestation a été facturée.')
 }
+
+const interventionVisible = ref(false)
+provide('interventionModal', interventionVisible);
+
+function showInterventionDetail(event: any) {
+  interventionVisible.value = !interventionVisible.value
+  console.log(event)
+}
+
 </script>
 
 <template>
   <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
     <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
+    <InterventionModal :is_open="interventionVisible" :interventions="interventions" @showInterventionDetail="(e) => console.log(e)" />
     <div class="is-light-mode">
-      <Qalendar :config="config" :events="events">
+      <Qalendar :config="config" :events="events" @event-was-clicked="(e: any) => showInterventionDetail(e.clickedEvent)">
         <template #eventDialog="props">
           <div v-if="props.eventDialogData && props.eventDialogData.title" class="p-3">
             <header class="w-full flex flex-row justify-between items-center mb-2">
