@@ -1,6 +1,8 @@
 # NurseCareApp
 
-Ce repository contient les sources de l'application client **NurseCare**, elle est réalisée avec vue 3 et exploite les données de l'[API NurseCare](https://github.com/Kaboufl/NurseCare)
+Ce repository contient les sources de l'application client **NurseCare**, elle est réalisée avec vue 3 et exploite les données de l'[API NurseCare](https://github.com/Kaboufl/NurseCare).
+
+Les modèles de données mappés sur le schema de la base de donnée sont dans le fichier `./src/models.ts`, il faut penser à reporter les migrations de la base de données dans ce fichier.
 
 ## Extensions VScode recommandées
 
