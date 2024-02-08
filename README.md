@@ -1,49 +1,11 @@
 # NurseCareApp
 
-This template should help get you started developing with Vue 3 in Vite.
+Ce repository contient les sources de l'application client **NurseCare**, elle est réalisée avec vue 3 et exploite les données de l'[API NurseCare](https://github.com/Kaboufl/NurseCare)
 
-## Recommended IDE Setup
+## Extensions VScode recommandées
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+ - [Extension vue pour TypeScript (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
+ - [Tailwind CSS Intellisense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
 ## Comment travailler sur le projet ?
 
@@ -58,3 +20,43 @@ La branche `main` du projet est la branche supposée être la plus stable, const
   - Commentez vos changements
   - Chaque merge devra etre approuvé par chacun de nous
   - _Rinse and repeat_
+
+## Support de type pour les imports `.vue` en TS
+Par défaut, TypeScript ne peut pas gérer les informations de type pour les imports `.vue`, donc nous remplaçons la CLI `tsc` par `vue-tsc` pour la vérification de type. Dans les éditeurs, nous avons besoin du [Plugin TypeScript Vue (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) pour rendre le service de langage TypeScript conscient des types `.vue`.
+
+Si le plugin TypeScript autonome ne vous semble pas assez rapide, Volar a également mis en œuvre un [Mode de prise de contrôle](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) qui est plus performant. Vous pouvez l'activer en suivant les étapes suivantes :
+
+1. Désactivez l'extension TypeScript intégrée
+   1. Exécutez `Extensions: Afficher les extensions intégrées` à partir de la palette de commandes de VSCode
+   2. Trouvez `Fonctionnalités de langage TypeScript et JavaScript`, faites un clic droit et sélectionnez `Désactiver (Espace de travail)`
+2. Rechargez la fenêtre VSCode en exécutant `Développeur: Recharger la fenêtre` à partir de la palette de commandes.
+
+## Personnaliser le serveur de développement
+
+Vous pouvez configurer le comportement du serveur de développement via le fichier `vite.config.ts` ([Documentation](https://vitejs.dev/config/)).
+
+## Installation du projet
+
+```sh
+npm install
+```
+
+### Démarrer le serveur de Dev (HotModuleReplacement)
+
+```sh
+npm run dev
+```
+
+### Compiler les sources du projet
+
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
+
+
