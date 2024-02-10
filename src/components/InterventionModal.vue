@@ -34,7 +34,7 @@ function setIsOpen(value: boolean) {
 <template>
     <Dialog :open="isOpen" @close="setIsOpen" class="fixed z-50 inset-0 flex w-screen items-center justify-center p-4">
 
-        <DialogPanel class="relative w-full h-[80dvh] md:h-fit shadow-md border-2 p-4 border-primary rounded bg-white container">
+        <DialogPanel class="relative w-full h-fit shadow-md border-2 p-4 border-primary rounded bg-white container">
                 <button class="absolute top-2 right-2" @click="setIsOpen(false)">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                       stroke="currentColor" class="w-6 h-6">
