@@ -32,7 +32,7 @@ export interface Intervention {
   date_integration: Date | string;
   personnel?: Personnel;
   patient: Patient;
-  prestations?: Prestation[];
+  prestations: Prestation[];
 }
 
 export interface Prestation {
