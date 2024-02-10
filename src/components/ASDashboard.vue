@@ -1,20 +1,40 @@
 <script setup lang="ts">
-import { onMounted, computed, ref, type Ref } from 'vue'
-import type Personnel from '@/models/Personnel'
+import { onMounted, inject, computed, ref, type Ref } from 'vue'
+import type { Personnel, Intervention } from '@/models'
+import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 import { PDFDocument } from 'pdf-lib'
 
 
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
-const userProfile: Ref<Partial<Personnel>> = ref({
+const { userProfile } = inject('userProfile') as {
+  userProfile: Ref<Personnel>}
 
+// console.log(userProfile.value)
 
+const interventions: Ref<Intervention[]> = ref([])
+const selectedIntervention: Ref<Intervention> = ref({
+  id: 0,
+  date: '',
+  lieu: '',
+  etat_facture: '',
+  date_facture: '',
+  date_integration: '',
+  patient: {
+    id: 0,
+    nom: '',
+    prenom: '',
+    adresse: '',
+    tel: '',
+    mail: '',
+  },
+  prestations: []
 })
-const interventions = ref([])
 
-const parseDateQalendar = (dateStr: string) => {
+defineEmits(["showInterventionDetail", "test"])
+
+const parseDateQalendar = (dateStr: Date | string) => {
   const date = new Date(dateStr)
 
   const year = date.getFullYear()
@@ -36,15 +56,16 @@ const parseDateQalendar = (dateStr: string) => {
 }
 
 const events = computed(() => {
-  return interventions.value.map((intervention: any) => {
+  return interventions.value.map((intervention: Intervention) => {
     return {
+      ...intervention,
       title: intervention.patient.nom,
       time: parseDateQalendar(intervention.date),
       color: 'green',
       isEditable: false,
       isCustom: false,
       id: intervention.id,
-      description: `${intervention.prestations.length} prestation(s)`,
+      description: `${intervention.prestations?.length} prestation(s)`,
       prestations: intervention.prestations,
       patient: intervention.patient
     }
@@ -68,15 +89,16 @@ onMounted(async () => {
       throw new Error('Erreur')
     }
     const response = await request.json()
-    console.log(response)
     userProfile.value = {
+      ...response,
       id: response.id,
       nom: response.nom,
       prenom: response.prenom,
-      email: response.mail,
+      adresse: response.adresse,
       tel: response.tel,
+      mail: response.mail,
+      role: response.role
     }
-    console.log(userProfile.value)
     interventions.value = response.interventions
     //console.log(events.value)
   } catch (error) {
@@ -114,7 +136,8 @@ const config = ref({
     end: 19
   },
   eventDialog: {
-    isCustom: true
+    isCustom: true,
+    isDisabled: true
   }
 })
 
@@ -125,56 +148,32 @@ async function facturer() {
   const pdfBytes = await pdfFact.save()
   // alert('La prestation a été facturée.')
 }
+
+const interventionVisible = ref(false)
+
+function showInterventionDetail(event: any) {
+  console.log(event)
+  try {
+    const interventionTrouvee = interventions.value.find((intervention: Intervention) => intervention.id === event.id)
+    if (!interventionTrouvee) {
+      throw new Error('Intervention non trouvée')
+    }
+    selectedIntervention.value = interventionTrouvee
+    interventionVisible.value = !interventionVisible.value
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 </script>
 
 <template>
   <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
     <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
+    <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event" :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
     <div class="is-light-mode">
-      <Qalendar :config="config" :events="events">
-        <template #eventDialog="props">
-          <div v-if="props.eventDialogData && props.eventDialogData.title" class="p-3">
-            <header class="w-full flex flex-row justify-between items-center mb-2">
-              <span><b>Patient : </b>{{ props.eventDialogData.patient.nom }}</span>
-              <button class="" @click="props.closeEventDialog">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </header>
-            <main class="w-full h-fit flex flex-col gap-2">
-              <span
-                >{{ props.eventDialogData.prestations.length }} prestation{{
-                  props.eventDialogData.prestations.length > 1 ? 's' : ''
-                }}
-                à réaliser</span
-              >
-                <section class="h-[30dvh] bg-slate-100 border border-slate-400 rounded-lg overflow-y-scroll flex flex-col gap-2 col-span-2 row-start-2">
-                  <div v-for="prestation in props.eventDialogData.prestations" :key="prestation.id">
-                    <Disclosure as="div" class="px-4 py-2" v-slot="{ open }">
-                      <DisclosureButton class="flex w-full justify-between items-center rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
-                        <span>{{ prestation.soin.libelle }} - <b>{{ prestation.soin.prix }} €</b></span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-purple-500" :class="open ? 'rotate-180 transform' : ''">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-                        </svg>
-
-                    </DisclosureButton>
-                    <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500 flex flex-row">
-                      {{ prestation.commentaire }}
-                    </DisclosurePanel>
-
-
-                  </Disclosure>
-                </div>
-              </section>
-            </main>
-            <footer>
-              <a class="" @click="facturer">Facturer</a>
-              <a class="" @click="props.closeEventDialog">Bon d'observation</a>
-            </footer>
-          </div>
-        </template>
+      <Qalendar :config="config" :events="events" @event-was-clicked="(e: any) => showInterventionDetail(e.clickedEvent)">
+       
       </Qalendar>
     </div>
   </div>
