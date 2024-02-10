@@ -9,6 +9,7 @@ Disclosure,
 DisclosureButton,
 DisclosurePanel
 } from '@headlessui/vue'
+import type { Intervention } from '@/models'
 
 const props = defineProps<{
     is_open: boolean,
@@ -70,8 +71,8 @@ function setIsOpen(value: boolean) {
               </section>
             </main>
             <footer>
-              <a class="" @click="facturer">Facturer</a>
-              <a class="" @click="props.closeEventDialog">Bon d'observation</a>
+              <a class="" >Facturer</a>
+              <a class="" >Bon d'observation</a>
             </footer>
 
                 <!-- ... -->
