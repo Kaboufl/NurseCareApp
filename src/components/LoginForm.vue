@@ -63,6 +63,7 @@ const login = async () => {
           break
 
         case 2:
+          router.push({ name: 'SecretaireDashboard' })
           break
 
         case 3:
