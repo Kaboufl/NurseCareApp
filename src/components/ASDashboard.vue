@@ -4,7 +4,6 @@ import type { Personnel, Intervention } from '@/models'
 import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
-import { PDFDocument } from 'pdf-lib'
 
 
 
@@ -141,14 +140,6 @@ const config = ref({
     isDisabled: true
   }
 })
-
-async function facturer() {
-  //const pdfFact = await PDFDocument.create()
-  //const pageFact = pdfFact.addPage()
-  //pageFact.drawText('Facture très élaborée')
-  //const pdfBytes = await pdfFact.save()
-  //alert('La prestation a été facturée.')
-}
 
 const interventionVisible = ref(false)
 
