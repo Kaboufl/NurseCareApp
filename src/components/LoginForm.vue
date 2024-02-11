@@ -58,7 +58,7 @@ const login = async () => {
       localStorage.setItem('token', response.token)    
       updateUserProfile(response.user)
 
-      switch (response.role.id) {
+      switch (response.user.role.id) {
         case 1:
           break
 
