@@ -10,6 +10,8 @@ import {
   DisclosurePanel
 } from '@headlessui/vue'
 
+import type { Intervention } from '@/models';
+
 const props = defineProps<{
   is_open: boolean,
   intervention: Intervention
@@ -30,12 +32,23 @@ function setIsOpen(value: boolean) {
   emit('close', value)
 }
 
-const intervention = ref(props.intervention);
-
-function facturer() {
-  intervention.value.date_facture = new Date();
+async function facturer() {
+  const { intervention } = props;
+  const urlfact = `api/aide-soignant/interventions/facturer/${intervention.id}`;
+  // const urlmail = `/interventions/${intervention.id}/prestations/mailing`;
+  try {
+    fetch(urlfact, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('token')!,
+      },
+    });
+  } catch (error) {
+    console.error('Error:', error);
+  }
+  alert("Facturation effectuée avec succès");
 }
-
 </script>
 
 <template>
