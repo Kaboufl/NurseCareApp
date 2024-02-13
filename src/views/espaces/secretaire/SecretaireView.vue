@@ -6,7 +6,7 @@ import AppMenu from '@/components/AppMenu.vue'
 <template>
   <AppMenu />
 
-  <main>
+  <main class="container mx-auto">
     <router-view></router-view>
   </main>
 </template>

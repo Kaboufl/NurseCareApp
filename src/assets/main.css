@@ -32,8 +32,13 @@ html::-webkit-scrollbar {
 }
 
 #app {
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
   max-height: 100dvh;
+  overflow-y: scroll;
+  overflow-x: hidden;
   font-weight: normal;
 }
 
@@ -44,11 +49,11 @@ html::-webkit-scrollbar {
   padding: 3px;
 }
 
-@media (hover: hover) {
+/* @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
-}
+} */
 
 @media (min-width: 1024px) {
   body {
