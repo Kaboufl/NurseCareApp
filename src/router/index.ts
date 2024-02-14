@@ -4,7 +4,7 @@ import LoginForm from '@/components/LoginForm.vue'
 import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
 import SecretaireView from '@/views/espaces/secretaire/SecretaireView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
-import SecretaireDashboard from '@/components/SecretaireDashboard.vue'
+import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
