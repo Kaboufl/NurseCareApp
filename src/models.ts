@@ -75,3 +75,9 @@ export interface BonObservation {
   commentaire: string;
   prestation: Prestation;
 }
+
+export interface MenuItems {
+  libelle: string
+  routeName: string
+  disabled?: boolean
+}

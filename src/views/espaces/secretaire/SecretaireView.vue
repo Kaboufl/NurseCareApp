@@ -1,19 +1,49 @@
 <script setup lang="ts">
 import AppMenu from '@/components/AppMenu.vue'
+import AppTabs from '@/components/AppTabs.vue'
+import type { MenuItems } from '@/models'
+import { ref, type Ref } from 'vue'
 
+const routes: Ref<MenuItems[]> = ref([
+  {
+    libelle: 'Acceuil',
+    routeName: 'SecretaireDashboard',
+    disabled: false
+  },
+  {
+    libelle: 'Aide-soignants',
+    routeName: 'Connexion'
+  },
+  {
+    libelle: 'Patients',
+    routeName: 'Connexion'
+  },
+  {
+    libelle: "Calendrier d'interventions",
+    routeName: 'CalendrierInterventions'
+  }
+])
 </script>
 
 <template>
   <AppMenu />
 
-  <main class="container mx-auto">
-    <router-view></router-view>
-  </main>
+  <div class="container mx-auto p-2 box-border">
+    <main class="bg-white h-full rounded-md lg:px-20">
+      <AppTabs :menu-items="routes" />
+      <router-view></router-view>
+    </main>
+  </div>
 </template>
 
 <style scoped>
+div {
+  height: 100%;
+  max-height: 90vh;
+}
+
 main {
-  height: 90svh;
+  min-height: 100%;
   width: 100%;
   padding: 1.075rem;
   overflow-y: scroll;
