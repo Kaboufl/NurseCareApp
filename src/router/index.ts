@@ -5,6 +5,7 @@ import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
 import SecretaireView from '@/views/espaces/secretaire/SecretaireView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
 import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
+import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +38,8 @@ const router = createRouter({
           component: ASDashboard,
           name: 'ASDashboard',
           props: true
-        }
+        },
+        
       ]
     },
     {
@@ -54,6 +56,11 @@ const router = createRouter({
           path: '',
           component: SecretaireDashboard,
           name: 'SecretaireDashboard'
+        },
+        {
+          path: '/interventions',
+          component: CalendrierInterventions,
+          name: 'CalendrierInterventions'
         }
       ]
     }
