@@ -9,7 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Personnel } from '@/models'
+import type { Personnel, InterventionQalendar } from '@/models'
+
 import { inject, onMounted, type Ref } from 'vue'
 
 const { userProfile } = inject('userProfile') as {

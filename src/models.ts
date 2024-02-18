@@ -81,3 +81,20 @@ export interface MenuItems {
   routeName: string
   disabled?: boolean
 }
+
+export interface InterventionQalendar extends Intervention {
+  title: string
+  with: string
+  time: {
+    start: string
+    end: string
+  }
+  color: string
+  isEditable: boolean
+  isCustom: boolean
+  id: number
+  description: string
+  prestations: Prestation[]
+  patient: Patient
+
+}

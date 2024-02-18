@@ -29,7 +29,7 @@ const routes: Ref<MenuItems[]> = ref([
   <AppMenu />
 
   <div class="container mx-auto p-2 box-border">
-    <main class="bg-white h-full rounded-md lg:px-20">
+    <main class="bg-white rounded-md lg:px-20">
       <AppTabs :menu-items="routes" />
       <router-view></router-view>
     </main>

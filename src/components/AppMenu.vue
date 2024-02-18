@@ -4,8 +4,10 @@ import { ref } from 'vue'
 
 const isOpen = ref(false)
 
-const logOut = ref(() => {
-  localStorage.removeItem('token')
+const logOut = ref(async () => {
+  const request = await fetch('/api/auth/logout')
+  const response = await request.json()
+  console.log(response)
   router.push('/')
 })
 </script>

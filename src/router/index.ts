@@ -7,6 +7,7 @@ import ASDashboard from '@/components/ASDashboard.vue'
 import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
 import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -27,7 +28,7 @@ const router = createRouter({
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('token') && false) {
           return next({ name: 'Connexion' })
         }
         next()
@@ -46,7 +47,7 @@ const router = createRouter({
       path: '/secretaire',
       component: SecretaireView,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('token') && false) {
           return next({ name: 'Connexion' })
         }
         next()
