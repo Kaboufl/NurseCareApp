@@ -177,7 +177,7 @@ const calendarConfig = ref({
 }
 
 .conteneur-calendrier {
-  max-height: 74vh;
+  max-height: 70vh;
   box-sizing: content-box;
 }
 </style>
