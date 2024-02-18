@@ -84,7 +84,7 @@ async function saveIntervention() {
               <div class="relative w-full cursor-default overflow-hidden text-left">
                 <ComboboxInput
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  :displayValue="(patient) => patient.nom"
+                  :displayValue="(patient: any) => patient.nom"
                   @change="patientsQuery = $event.target.value"
                 />
                 <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
