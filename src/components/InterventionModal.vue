@@ -25,7 +25,7 @@ const isOpen = computed(() => {
   return props.is_open;
 })
 
-
+const isDialogOpen = ref(false)
 
 function setIsOpen(value: boolean) {
   console.log(value, 'is open')
@@ -37,31 +37,37 @@ async function facturer() {
   const urlfact = `api/aide-soignant/interventions/facturer/${intervention.id}`;
   // const urlmail = `/interventions/${intervention.id}/prestations/mailing`;
   try {
-    fetch(urlfact, {
+    const response = await fetch(urlfact, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         authorization: localStorage.getItem('token')!,
       },
-    });
+    })
+    if (response.ok) {
+      isDialogOpen.value = true;
+    } else {
+      throw new Error('Erreur');
+    };
   } catch (error) {
     console.error('Error:', error);
   }
-  alert("Facturation effectuée avec succès");
+  console.log("Facturation effectuée");
 }
 </script>
 
 <template>
-  <Dialog :open="isOpen" @close="setIsOpen" class="fixed z-50 inset-0 flex w-screen items-center justify-center p-4">
+  <Dialog @initialFocus.prevent="Dialog" :open="isOpen" @close="setIsOpen"
+    class="fixed z-50 inset-0 flex w-screen items-center justify-center p-4">
 
     <DialogPanel class="relative w-full h-fit shadow-md border-2 p-4 border-primary rounded bg-white container">
-      <button class="absolute top-2 right-2" @click="setIsOpen(false)">
+      <button tabindex="-1" class="tblur absolute top-2 right-2" @click="setIsOpen(false)">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
       </button>
-      <DialogTitle>Complete your order</DialogTitle>
+      <DialogTitle>Détails de l'intervention</DialogTitle>
 
       <main class="w-full h-fit flex flex-col gap-2">
         <span>{{ props.intervention.prestations.length }} prestation{{
