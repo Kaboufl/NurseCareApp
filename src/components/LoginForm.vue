@@ -79,8 +79,8 @@ const login = async () => {
 </script>
 
 <template>
-  <main class="w-full h-fit p-4 pt-12">
-    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+  <main class="w-full h-full p-4 pt-12 grid items-start md:place-items-center">
+    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 md:max-w-md xl:p-0">
       <form @submit.prevent="login()" class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
           Connectez-vous

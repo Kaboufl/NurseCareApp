@@ -3,7 +3,7 @@ import { onMounted, computed, ref, type Ref } from 'vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 
-import { Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/vue'
+import { Dialog, DialogPanel, DialogTitle, DialogDescription, TransitionRoot } from '@headlessui/vue'
 import type { Personnel, InterventionQalendar, Intervention } from '@/models'
 import FicheIntervention from '@/components/fiches/FicheIntervention.vue'
 
@@ -150,21 +150,30 @@ const calendarConfig = ref({
     <section class="conteneur-calendrier">
       <Qalendar :config="calendarConfig" :events="events" />
     </section>
-    <Dialog :open="showFicheIntervention" @close="setshowFicheIntervention" class="relative z-50">
-      <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
-      <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <DialogPanel
-          as="div"
-          class="w-full min-h-56 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-        >
-          <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-            >Ajouter une intervention</DialogTitle
-          >
-
-          <FicheIntervention :selected-intervention="newIntervention" />
-        </DialogPanel>
-      </div>
-    </Dialog>
+    <TransitionRoot 
+      :show="showFicheIntervention"
+      as="template"
+      enter="duration-200 ease-out"
+      enter-from="opacity-0"
+      enter-to="opacity-100"
+      leave="duration-200 ease-in"
+      leave-from="opacity-100"
+      leave-to="opacity-0"
+    >
+      <Dialog @close="setshowFicheIntervention" class="relative z-50">
+        <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel
+            as="div"
+            class="w-full min-h-56 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+            >
+            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
+            >Ajouter une intervention</DialogTitle>
+            <FicheIntervention :selected-intervention="newIntervention" />
+          </DialogPanel>
+        </div>
+      </Dialog>
+  </TransitionRoot>
   </div>
 </template>
 
