@@ -3,14 +3,16 @@ import HomeView from '../views/HomeView.vue'
 import LoginForm from '@/components/LoginForm.vue'
 import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
+import DirHome from '@/views/espaces/aideSoignant/HomeView.vue'
+import DirDashboard from '@/components/DirDashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'Accueil',
-      component: HomeView
+      name: 'Connexion',
+      component: LoginForm
     },
     {
       path: '/login',
@@ -34,6 +36,24 @@ const router = createRouter({
           path: '',
           component: ASDashboard,
           name: 'ASDashboard',
+          props: true
+        }
+      ]
+    },
+    {
+      path: '/directeur',
+      component: DirHome,
+      beforeEnter: (to, from, next) => {
+        if (!localStorage.getItem('token')) {
+          return next({ name: 'Connexion'})
+        }
+        next()
+      },
+      children: [
+        {
+          path: '',
+          component: DirDashboard,
+          name: 'DirDashboard',
           props: true
         }
       ]
