@@ -3,7 +3,13 @@ import { onMounted, computed, ref, type Ref } from 'vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 
-import { Dialog, DialogPanel, DialogTitle, DialogDescription, TransitionRoot } from '@headlessui/vue'
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  DialogDescription,
+  TransitionRoot
+} from '@headlessui/vue'
 import type { Personnel, InterventionQalendar, Intervention } from '@/models'
 import FicheIntervention from '@/components/fiches/FicheIntervention.vue'
 
@@ -150,7 +156,7 @@ const calendarConfig = ref({
     <section class="conteneur-calendrier">
       <Qalendar :config="calendarConfig" :events="events" />
     </section>
-    <TransitionRoot 
+    <TransitionRoot
       :show="showFicheIntervention"
       as="template"
       enter="duration-200 ease-out"
@@ -165,15 +171,16 @@ const calendarConfig = ref({
         <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
             as="div"
-            class="w-full min-h-56 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-            >
+            class="container min-h-[75vh] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+          >
             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-            >Ajouter une intervention</DialogTitle>
+              >Ajouter une intervention</DialogTitle
+            >
             <FicheIntervention :selected-intervention="newIntervention" />
           </DialogPanel>
         </div>
       </Dialog>
-  </TransitionRoot>
+    </TransitionRoot>
   </div>
 </template>
 

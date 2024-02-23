@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Intervention, Patient, Personnel, Soin } from '@/models'
+import type { Intervention, Patient, Personnel, Prestation, Soin } from '@/models'
 import { computed, onMounted, ref, type Ref } from 'vue'
 import {
   Combobox,
@@ -10,8 +10,9 @@ import {
   ComboboxOptions,
   TransitionRoot
 } from '@headlessui/vue'
+// @ts-ignore
 import VueMultiSelect from 'vue-multiselect'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+import { CheckIcon, ChevronUpDownIcon, TrashIcon } from '@heroicons/vue/20/solid'
 
 const props = defineProps({
   selectedIntervention: Object as () => Intervention
@@ -19,6 +20,14 @@ const props = defineProps({
 
 //@ts-ignore
 const intervention: Ref<Intervention> = ref({})
+
+const newIntervention: Intervention = computed(() => {
+  const newIntervention: Intervention = {
+    ...intervention.value,
+    lieu: intervention.value.patient.adresse
+  }
+  return newIntervention
+})
 
 onMounted(() => {
   if (props.selectedIntervention) {
@@ -39,13 +48,13 @@ const filteredPatients = computed(() =>
       })
 )
 const infirmierQuery = ref('')
-const filteredInfirmiers = computed(() => 
-      infirmierQuery.value === ''
-        ? infirmiers.value
-        : infirmiers.value.filter((infirmier) => {
-          let fullName = `${infirmier.nom} ${infirmier.prenom}`
-          return fullName.toLocaleLowerCase().includes(infirmierQuery.value.toLowerCase())
-        })
+const filteredInfirmiers = computed(() =>
+  infirmierQuery.value === ''
+    ? infirmiers.value
+    : infirmiers.value.filter((infirmier) => {
+        let fullName = `${infirmier.nom} ${infirmier.prenom}`
+        return fullName.toLocaleLowerCase().includes(infirmierQuery.value.toLowerCase())
+      })
 )
 
 const patients: Ref<Patient[]> = ref([])
@@ -68,6 +77,7 @@ async function getAllInfirmiers() {
 }
 
 const soins: Ref<Soin[]> = ref([])
+const selectedSoins: Ref<Soin[]> = ref([])
 
 async function getSoins() {
   const request = await fetch('/api/secretaire/soins')
@@ -77,18 +87,33 @@ async function getSoins() {
   console.table(soins.value)
 }
 
-function addTag(newTag) {
-  const tag = {
-    name: newTag,
-    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-  }
-
-}
+const prestations = computed(() => {
+  const prestations = selectedSoins.value.map((soin) => {
+    const prestation: Prestation = {
+      id: 0,
+      commentaire: '',
+      soin: { ...soin }
+    }
+    return prestation
+  })
+  return prestations
+})
 
 const selectedPatient: Ref<Patient> = ref(patients.value[0])
 
 async function saveIntervention() {
-  console.log(intervention.value)
+  intervention.value.prestations = prestations.value
+  const inter = newIntervention.value
+  const request = await fetch('/api/secretaire/intervention', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(inter)
+  })
+  const response = await request.json()
+
+  console.log(response, inter)
 }
 </script>
 
@@ -131,7 +156,7 @@ async function saveIntervention() {
                 @after-leave="patientsQuery = ''"
               >
                 <ComboboxOptions
-                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                  class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
                 >
                   <div
                     v-if="filteredPatients.length === 0 && patientsQuery !== ''"
@@ -176,7 +201,8 @@ async function saveIntervention() {
         </div>
         <div class="col-start-1">
           <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900"
-            >Assigner un(e) infirmier(ière)</label>
+            >Assigner un(e) infirmier(ière)</label
+          >
 
           <Combobox v-model="intervention.personnel">
             <div class="relative">
@@ -197,7 +223,7 @@ async function saveIntervention() {
                 @after-leave="infirmierQuery = ''"
               >
                 <ComboboxOptions
-                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                  class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
                 >
                   <div
                     v-if="filteredInfirmiers.length === 0 && infirmierQuery !== ''"
@@ -241,24 +267,101 @@ async function saveIntervention() {
           </Combobox>
         </div>
         <div class="col-start-2 row-start-1 row-span-3">
-          <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-full p-2.5">
+          <div
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-full p-2.5"
+          >
             <VueMultiSelect
-              :model-value="intervention.prestations"
+              v-model="selectedSoins"
               :options="soins"
               :multiple="true"
-              :taggable="true"
+              :close-on-select="false"
+              placeholder="Choisissez des soins à réaliser"
+              selectLabel="Entrée pour sélectionner"
+              deselect-label="Entrée pour supprimer"
+              selected-label="Sélectionné"
               label="libelle"
               track-by="id"
             >
-            <template #options>
-              
-            </template>
-          </VueMultiSelect>
+              <template v-slot:selection="{ values, isOpen }">
+                <span class="multiselect__single" v-if="values.length" v-show="!isOpen"
+                  >{{ values.length }} prestation{{ values.length > 1 ? 's' : '' }}</span
+                >
+              </template>
 
+              <template v-slot:option="props">
+                <div class="option__desc">
+                  <span class="option__title">{{ props.option.libelle }}</span>
+                </div>
+              </template>
+
+              <!-- <template v-slot:beforeList>
+                <div>
+
+                </div>
+              </template> -->
+            </VueMultiSelect>
+
+            <ul class="prestations">
+              <li v-for="prestation in prestations" :key="prestation.soin.id">
+                <span>{{ prestation.soin.libelle }} - {{ prestation.soin.prix + ' €' }}</span>
+                <button
+                  type="button"
+                  @click="
+                    selectedSoins = selectedSoins.filter((soin) => soin.id !== prestation.soin.id)
+                  "
+                >
+                  <TrashIcon class="h-4 w-4 text-red-400" />
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
-        
-      </div> 
+      </div>
+      <div class="w-full flex flex-row justify-center">
+        <button type="button" @click="saveIntervention">Enregistrer</button>
+      </div>
     </form>
   </section>
 </template>
+
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
+<style scoped>
+.prestations-control {
+  width: 100%;
+  margin: 1dvw 0;
+  height: 5dvh;
+  display: flex;
+  flex-direction: row;
+  gap: 1.2dvw;
+}
+
+.prestations-control button {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: #f6a2d2;
+  color: white;
+}
+
+.prestations {
+  width: 100%;
+  padding: 0.5dvw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7dvw;
+}
+
+.prestations li {
+  width: 100%;
+  margin: 0;
+  padding: 0.5dvw 1.2dvw;
+  background: white;
+  border-radius: 20px;
+  border: solid 2px #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

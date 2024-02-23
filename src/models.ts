@@ -38,7 +38,7 @@ export interface Intervention {
 export interface Prestation {
   id: number;
   commentaire: string;
-  intervention: Intervention;
+  intervention?: Intervention;
   soin: Soin;
   bonsObservation?: BonObservation[];
 }
