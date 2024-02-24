@@ -38,13 +38,14 @@ function setshowFicheIntervention(value: boolean) {
   showFicheIntervention.value = value
 }
 
-const parseDateQalendar = (dateStr: Date | string) => {
+const parseDateQalendar = (dateStr: Date | string, nthEvent: number) => {
   const date = new Date(dateStr)
+  const opening = calendarConfig.value.dayBoundaries.start
 
   const year = date.getFullYear()
   const month = date.getMonth() + 1 // Months are 0-based in JavaScript
   const day = date.getDate()
-  const hours = date.getHours()
+  const hours = date.getHours() > opening ? date.getHours() : opening + 2 * nthEvent
   const endHours = hours + 2
 
   // Pad single digit month, day, and hours with a leading 0
@@ -60,12 +61,12 @@ const parseDateQalendar = (dateStr: Date | string) => {
 }
 
 const events = computed(() => {
-  return interventions.value.map((intervention: Intervention): InterventionQalendar => {
+  return interventions.value.map((intervention: Intervention, index): InterventionQalendar => {
     return {
       ...intervention,
       title: `${intervention.prestations?.length} prestation(s)`,
       with: intervention.personnel!.nom,
-      time: parseDateQalendar(intervention.date),
+      time: parseDateQalendar(intervention.date, index),
       color: 'green',
       isEditable: false,
       isCustom: false,
@@ -176,7 +177,16 @@ const calendarConfig = ref({
             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
               >Ajouter une intervention</DialogTitle
             >
-            <FicheIntervention :selected-intervention="newIntervention" />
+            <FicheIntervention
+              @cancel="setshowFicheIntervention(false)"
+              @intervention-added="
+                () => {
+                  setshowFicheIntervention(false)
+                  getInterventions()
+                }
+              "
+              :selected-intervention="newIntervention"
+            />
           </DialogPanel>
         </div>
       </Dialog>

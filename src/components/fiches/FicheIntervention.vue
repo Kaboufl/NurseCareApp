@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Intervention, Patient, Personnel, Prestation, Soin } from '@/models'
-import { computed, onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref, type Ref, type ComputedRef } from 'vue'
 import {
   Combobox,
   ComboboxInput,
@@ -18,10 +18,12 @@ const props = defineProps({
   selectedIntervention: Object as () => Intervention
 })
 
+const emit = defineEmits(['cancel', 'interventionAdded'])
+
 //@ts-ignore
 const intervention: Ref<Intervention> = ref({})
 
-const newIntervention: Intervention = computed(() => {
+const newIntervention: ComputedRef<Intervention> = computed(() => {
   const newIntervention: Intervention = {
     ...intervention.value,
     lieu: intervention.value.patient.adresse
@@ -112,6 +114,8 @@ async function saveIntervention() {
     body: JSON.stringify(inter)
   })
   const response = await request.json()
+
+  emit('interventionAdded')
 
   console.log(response, inter)
 }
@@ -313,12 +317,26 @@ async function saveIntervention() {
                   <TrashIcon class="h-4 w-4 text-red-400" />
                 </button>
               </li>
+              <li v-if="!prestations.length">Aucune prestation.</li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="w-full flex flex-row justify-center">
-        <button type="button" @click="saveIntervention">Enregistrer</button>
+      <div class="w-full flex flex-row gap-4 justify-center">
+        <button
+          type="button"
+          class="px-6 py-3 rounded text-white font-medium bg-red-500"
+          @click="$emit('cancel')"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="px-6 py-3 rounded text-white font-medium bg-primary"
+          @click="saveIntervention"
+        >
+          Enregistrer
+        </button>
       </div>
     </form>
   </section>
