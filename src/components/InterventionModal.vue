@@ -35,7 +35,7 @@ function setIsOpen(value: boolean) {
 async function facturer() {
   const { intervention } = props;
   const urlfact = `api/aide-soignant/interventions/facturer/${intervention.id}`;
-  // const urlmail = `/interventions/${intervention.id}/prestations/mailing`;
+  const urlmail = `api/aide-soignant/interventions/mailing/${intervention.id}`;
   try {
     const response = await fetch(urlfact, {
       method: 'PUT',
@@ -44,7 +44,14 @@ async function facturer() {
         authorization: localStorage.getItem('token')!,
       },
     })
-    if (response.ok) {
+    const responseMail = await fetch(urlmail, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('token')!,
+      },
+    })
+    if (response.ok && responseMail.ok) {
       isDialogOpen.value = true;
     } else {
       throw new Error('Erreur');
