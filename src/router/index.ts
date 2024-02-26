@@ -2,7 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginForm from '@/components/LoginForm.vue'
 import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
+import SecretaireView from '@/views/espaces/secretaire/SecretaireView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
+import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
+import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,7 +28,7 @@ const router = createRouter({
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('token') && false) {
           return next({ name: 'Connexion' })
         }
         next()
@@ -35,6 +39,29 @@ const router = createRouter({
           component: ASDashboard,
           name: 'ASDashboard',
           props: true
+        },
+        
+      ]
+    },
+    {
+      path: '/secretaire',
+      component: SecretaireView,
+      beforeEnter: (to, from, next) => {
+        if (!localStorage.getItem('token') && false) {
+          return next({ name: 'Connexion' })
+        }
+        next()
+      },
+      children: [
+        {
+          path: '',
+          component: SecretaireDashboard,
+          name: 'SecretaireDashboard'
+        },
+        {
+          path: '/interventions',
+          component: CalendrierInterventions,
+          name: 'CalendrierInterventions'
         }
       ]
     }

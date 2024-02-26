@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import { onMounted, inject, computed, ref, type Ref } from 'vue'
-import type { Personnel, Intervention } from '@/models'
+import type { Personnel, Intervention, Prestation, Patient } from '@/models'
 import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 
+interface InterventionQalendar extends Intervention {
+  title: string
+  with: string
+  time: {
+    start: string
+    end: string
+  }
+  color: string
+  isEditable: boolean
+  isCustom: boolean
+  id: number
+  description: string
+  prestations: Prestation[]
+  patient: Patient
 
+}
 
 const { userProfile } = inject('userProfile') as {
   userProfile: Ref<Personnel>
@@ -56,10 +71,11 @@ const parseDateQalendar = (dateStr: Date | string) => {
 }
 
 const events = computed(() => {
-  return interventions.value.map((intervention: Intervention) => {
+  return interventions.value.map((intervention: Intervention): InterventionQalendar => {
     return {
       ...intervention,
-      title: intervention.patient.nom,
+      title: `${intervention.prestations?.length} prestation(s)`,
+      with: intervention.patient.nom,
       time: parseDateQalendar(intervention.date),
       color: 'green',
       isEditable: false,
