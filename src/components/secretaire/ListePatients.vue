@@ -38,6 +38,7 @@ import FicheIntervention from '@/components/fiches/FicheIntervention.vue'
     </header>
 
     <h1>PATIENNNNNNTS !!!!!!</h1>
+    <!-- Voir la maquette ici pour construire le tableau : https://colorlib.com/etc/tb/Table_Fixed_Header/index.html -->
   </div>
 </template>
 
