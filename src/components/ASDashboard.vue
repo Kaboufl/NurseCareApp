@@ -4,7 +4,6 @@ import type { Personnel, Intervention, Prestation, Patient } from '@/models'
 import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
-import { PDFDocument } from 'pdf-lib'
 
 interface InterventionQalendar extends Intervention {
   title: string
@@ -24,7 +23,8 @@ interface InterventionQalendar extends Intervention {
 }
 
 const { userProfile } = inject('userProfile') as {
-  userProfile: Ref<Personnel>}
+  userProfile: Ref<Personnel>
+}
 
 // console.log(userProfile.value)
 
@@ -157,14 +157,6 @@ const config = ref({
   }
 })
 
-async function facturer() {
-  const pdfFact = await PDFDocument.create()
-  const pageFact = pdfFact.addPage()
-  pageFact.drawText('Facture très élaborée')
-  const pdfBytes = await pdfFact.save()
-  // alert('La prestation a été facturée.')
-}
-
 const interventionVisible = ref(false)
 
 function showInterventionDetail(event: any) {
@@ -186,10 +178,11 @@ function showInterventionDetail(event: any) {
 <template>
   <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
     <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
-    <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event" :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
+    <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event"
+      :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
     <div class="is-light-mode">
       <Qalendar :config="config" :events="events" @event-was-clicked="(e: any) => showInterventionDetail(e.clickedEvent)">
-       
+
       </Qalendar>
     </div>
   </div>
