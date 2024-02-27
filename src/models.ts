@@ -32,13 +32,13 @@ export interface Intervention {
   date_integration: Date | string;
   personnel?: Personnel;
   patient: Patient;
-  prestations?: Prestation[];
+  prestations: Prestation[];
 }
 
 export interface Prestation {
   id: number;
   commentaire: string;
-  intervention: Intervention;
+  intervention?: Intervention;
   soin: Soin;
   bonsObservation?: BonObservation[];
 }
@@ -74,4 +74,27 @@ export interface BonObservation {
   note: string;
   commentaire: string;
   prestation: Prestation;
+}
+
+export interface MenuItems {
+  libelle: string
+  routeName: string
+  disabled?: boolean
+}
+
+export interface InterventionQalendar extends Intervention {
+  title: string
+  with: string
+  time: {
+    start: string
+    end: string
+  }
+  color: string
+  isEditable: boolean
+  isCustom: boolean
+  id: number
+  description: string
+  prestations: Prestation[]
+  patient: Patient
+
 }
