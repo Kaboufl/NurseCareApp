@@ -1,14 +1,37 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 
-import { provide, ref, type Ref } from 'vue'
+import { onMounted, provide, ref, type Ref } from 'vue'
 import type { Personnel } from '@/models'
 
 const userProfile: Ref<Partial<Personnel>> = ref({})
+const router = useRouter()
 
-function updateUserProfile(user: Partial<Personnel>) {
-  userProfile.value = user
+async function updateUserProfile() {
+  if (document.cookie.split(';').some((item) => item.trim().startsWith('access_token='))) {
+    return (userProfile.value = {})
+  }
+
+  const request = await fetch('/api/auth/profile', {
+    headers: { 'Content-Type': 'application/json' }
+  })
+  if (request.status === 403) {
+    return router.push({ name: 'Connexion' })
+  }
+
+  const response = await request.json()
+  const { user } = response
+
+  console.log(response)
+  return (userProfile.value = user)
 }
+
+onMounted(() => {
+  console.log(userProfile.value)
+  if (Object.keys(userProfile.value).length === 0) {
+    updateUserProfile()
+  }
+})
 
 provide('userProfile', {
   userProfile,

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { inject, provide, ref, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { Personnel } from "@/models"
+import type { Personnel } from '@/models'
 
 const router = useRouter()
 
 const { userProfile, updateUserProfile } = inject('userProfile') as {
-  userProfile: Ref<Partial<Personnel>>,
+  userProfile: Ref<Partial<Personnel>>
   updateUserProfile: (user: Partial<Personnel>) => void
 }
 
@@ -54,15 +54,14 @@ const login = async () => {
       error.value.msg = response.message
     }
     console.log(response)
-    if (response.statut === 'ok') {
-      localStorage.setItem('token', response.token)    
+    if (request.status === 200) {
       updateUserProfile(response.user)
-
-      switch (response.role.id) {
+      switch (response.user.role.id) {
         case 1:
           break
 
         case 2:
+          router.push({ name: 'SecretaireDashboard' })
           break
 
         case 3:
@@ -80,9 +79,9 @@ const login = async () => {
 </script>
 
 <template>
-  <main class="w-full h-fit p-4 pt-12">
-    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
-      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+  <main class="w-full h-full p-4 pt-12 grid items-start md:place-items-center">
+    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 md:max-w-md xl:p-0">
+      <form @submit.prevent="login()" class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
           Connectez-vous
         </h1>
@@ -136,14 +135,13 @@ const login = async () => {
             </div>
           </div> -->
           <button
-            type="button"
-            v-on:click="login()"
+            type="submit"
             class="w-full text-white bg-[#f6a2d2] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
             Se connecter
           </button>
         </div>
-      </div>
+      </form>
     </div>
   </main>
 </template>
