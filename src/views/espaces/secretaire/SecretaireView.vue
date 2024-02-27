@@ -16,7 +16,7 @@ const routes: Ref<MenuItems[]> = ref([
   },
   {
     libelle: 'Patients',
-    routeName: 'Connexion'
+    routeName: 'patients'
   },
   {
     libelle: "Calendrier d'interventions",
