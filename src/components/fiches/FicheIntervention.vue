@@ -26,13 +26,14 @@ const intervention: Ref<Intervention> = ref({})
 const newIntervention: ComputedRef<Intervention> = computed(() => {
   const newIntervention: Intervention = {
     ...intervention.value,
+    etat_facture: '',
     lieu: intervention.value.patient.adresse
   }
   return newIntervention
 })
 
 onMounted(() => {
-  if (props.selectedIntervention) {
+  if (props.selectedIntervention && props.selectedIntervention.id !== 0) {
     intervention.value = { ...props.selectedIntervention }
   }
   getAllPatients()
@@ -133,7 +134,7 @@ async function saveIntervention() {
             type="date"
             id="date"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            :value="intervention.date"
+            v-model="intervention.date"
           />
         </div>
         <div class="col-start-1">

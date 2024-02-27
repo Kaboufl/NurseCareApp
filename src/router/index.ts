@@ -6,6 +6,7 @@ import SecretaireView from '@/views/espaces/secretaire/SecretaireView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
 import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
 import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
+import ListePatients from '@/components/secretaire/ListePatients.vue'
 
 
 const router = createRouter({
@@ -13,24 +14,14 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Accueil',
-      component: HomeView
-    },
-    {
-      path: '/login',
       name: 'Connexion',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: LoginForm
     },
     {
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
-          return next({ name: 'Connexion' })
-        }
+        
         next()
       },
       children: [
@@ -47,9 +38,7 @@ const router = createRouter({
       path: '/secretaire',
       component: SecretaireView,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
-          return next({ name: 'Connexion' })
-        }
+        
         next()
       },
       children: [
@@ -62,6 +51,11 @@ const router = createRouter({
           path: '/interventions',
           component: CalendrierInterventions,
           name: 'CalendrierInterventions'
+        },
+        {
+          path: '/patients',
+          name: 'patients',
+          component: ListePatients
         }
       ]
     }
