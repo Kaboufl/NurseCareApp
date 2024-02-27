@@ -13,24 +13,14 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Accueil',
-      component: HomeView
-    },
-    {
-      path: '/login',
       name: 'Connexion',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: LoginForm
     },
     {
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
-          return next({ name: 'Connexion' })
-        }
+        
         next()
       },
       children: [
@@ -47,9 +37,7 @@ const router = createRouter({
       path: '/secretaire',
       component: SecretaireView,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
-          return next({ name: 'Connexion' })
-        }
+        
         next()
       },
       children: [
