@@ -9,7 +9,6 @@ import {
   DisclosureButton,
   DisclosurePanel
 } from '@headlessui/vue'
-import type { Intervention } from '@/models'
 
 import type { Intervention } from '@/models';
 
@@ -53,14 +52,13 @@ async function facturer() {
       },
     })
     if (response.ok && responseMail.ok) {
-      isDialogOpen.value = true;
+      console.log("Facturation effectuée");
     } else {
       throw new Error('Erreur');
     };
   } catch (error) {
     console.error('Error:', error);
   }
-  console.log("Facturation effectuée");
 }
 </script>
 
