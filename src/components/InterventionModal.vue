@@ -9,7 +9,6 @@ import {
   DisclosureButton,
   DisclosurePanel
 } from '@headlessui/vue'
-import type { Intervention } from '@/models'
 
 import type { Intervention } from '@/models';
 
