@@ -20,9 +20,7 @@ const router = createRouter({
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
-          return next({ name: 'Connexion' })
-        }
+        
         next()
       },
       children: [
@@ -39,9 +37,7 @@ const router = createRouter({
       path: '/secretaire',
       component: SecretaireView,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token') && false) {
-          return next({ name: 'Connexion' })
-        }
+        
         next()
       },
       children: [
