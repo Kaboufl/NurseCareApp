@@ -31,7 +31,9 @@ export interface Intervention {
   date_facture: Date | string;
   date_integration: Date | string;
   personnel?: Personnel;
-  patient: Patient;
+  personnelId: number;
+  patient?: Patient;
+  patientId: number;
   prestations: Prestation[];
 }
 
@@ -40,6 +42,7 @@ export interface Prestation {
   commentaire: string;
   intervention?: Intervention;
   soin: Soin;
+  soinId?: number;
   bonsObservation?: BonObservation[];
 }
 
