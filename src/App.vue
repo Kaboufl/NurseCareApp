@@ -4,6 +4,8 @@ import { RouterView, useRouter } from 'vue-router'
 import { onMounted, provide, ref, type Ref } from 'vue'
 import type { Personnel } from '@/models'
 
+import 'vue3-toastify/dist/index.css'
+
 const userProfile: Ref<Partial<Personnel>> = ref({})
 const router = useRouter()
 
