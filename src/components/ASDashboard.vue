@@ -1,26 +1,9 @@
 <script setup lang="ts">
 import { onMounted, inject, computed, ref, type Ref } from 'vue'
-import type { Personnel, Intervention, Prestation, Patient } from '@/models'
+import type { Personnel, Intervention, InterventionQalendar, Prestation, Patient } from '@/models'
 import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
-
-interface InterventionQalendar extends Intervention {
-  title: string
-  with: string
-  time: {
-    start: string
-    end: string
-  }
-  color: string
-  isEditable: boolean
-  isCustom: boolean
-  id: number
-  description: string
-  prestations: Prestation[]
-  patient: Patient
-
-}
 
 const { userProfile } = inject('userProfile') as {
   userProfile: Ref<Personnel>
@@ -44,6 +27,8 @@ const selectedIntervention: Ref<Intervention> = ref({
     tel: '',
     mail: '',
   },
+  personnelId: 0,
+  patientId: 0,
   prestations: []
 })
 
@@ -76,7 +61,7 @@ const events = computed(() => {
     return {
       ...intervention,
       title: `${intervention.prestations?.length} prestation(s)`,
-      with: intervention.patient.nom,
+      with: intervention.patient ? intervention.patient.nom : '',
       time: parseDateQalendar(intervention.date, index),
       color: 'green',
       isEditable: false,
@@ -84,7 +69,7 @@ const events = computed(() => {
       id: intervention.id,
       description: `${intervention.prestations?.length} prestation(s)`,
       prestations: intervention.prestations,
-      patient: intervention.patient
+      patient: intervention.patient ?? null
     }
   })
 })
@@ -177,8 +162,8 @@ function showInterventionDetail(event: any) {
 </script>
 
 <template>
-  <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
-    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
+  <div class="w-full h-full bg-white rounded-md p-2 lg:px-20 overflow-y-scroll">
+    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}, vous avez {{ interventions.length }} interventions à réaliser aujourd'hui</h2>
     <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event"
       :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
     <div class="is-light-mode">
