@@ -28,7 +28,7 @@ export interface Intervention {
   lieu: string;
   factureId?: number;
   etat_facture: string;
-  date_facture: Date | string;
+  date_facture: Date | string | null;
   date_integration: Date | string;
   personnel?: Personnel;
   personnelId: number;
