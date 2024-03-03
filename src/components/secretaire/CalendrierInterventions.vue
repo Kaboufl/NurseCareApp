@@ -16,7 +16,7 @@ import FicheIntervention from '@/components/fiches/FicheIntervention.vue'
 const interventions: Ref<Intervention[]> = ref([])
 
 const showFicheIntervention: Ref<boolean> = ref(false)
-const selectedIntervention: Ref<InterventionQalendar|null> = ref(null)
+const selectedIntervention: Ref<Intervention|null> = ref(null)
 const newIntervention: Ref<Intervention> = ref({
   id: 0,
   date: '2024-02-22',
@@ -32,10 +32,12 @@ const newIntervention: Ref<Intervention> = ref({
     tel: '',
     mail: ''
   },
-  prestations: []
+  prestations: [],
+  personnelId: 0,
+  patientId: 0
 })
 
-function setShowFicheIntervention(value: boolean, intervention: InterventionQalendar | null = {}) {
+function setShowFicheIntervention(value: boolean, intervention: Intervention | null = null) {
   if (intervention) {
     selectedIntervention.value = intervention
   }
@@ -77,7 +79,7 @@ const events = computed(() => {
       id: intervention.id,
       description: `${intervention.prestations?.length} prestation(s)`,
       prestations: intervention.prestations,
-      patient: intervention.patient
+      patient: intervention.patient!
     }
   })
 })
@@ -141,7 +143,7 @@ const calendarConfig = ref({
   <div class="w-full max-h-full conteneur-interventions is-light-mode">
     <header class="w-full flex flex-row p-2 gap-2">
       <button
-        @click="setShowFicheIntervention(true)"
+        @click="setShowFicheIntervention(true, newIntervention)"
         class="w-fit h-fit flex flex-row gap-2 items-center rounded-md bg-blue-400 text-white font-bold px-4 py-2"
       >
         <svg
@@ -189,7 +191,13 @@ const calendarConfig = ref({
                   getInterventions()
                 }
               "
-              :selected-intervention="newIntervention"
+              @intervention-updated="
+                () => {
+                  setShowFicheIntervention(false)
+                  getInterventions()
+                }
+              "
+              :selected-intervention="selectedIntervention"
             />
           </DialogPanel>
         </div>
