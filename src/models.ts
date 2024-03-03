@@ -32,7 +32,7 @@ export interface Intervention {
   date_integration: Date | string;
   personnel?: Personnel;
   personnelId: number;
-  patient?: Patient;
+  patient?: Patient | null;
   patientId: number;
   prestations: Prestation[];
 }
@@ -98,6 +98,6 @@ export interface InterventionQalendar extends Intervention {
   id: number
   description: string
   prestations: Prestation[]
-  patient: Patient
+  patient: Patient | null
 
 }
