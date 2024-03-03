@@ -37,11 +37,17 @@ Si le plugin TypeScript autonome ne vous semble pas assez rapide, Volar a égale
 
 Vous pouvez configurer le comportement du serveur de développement via le fichier `vite.config.ts` ([Documentation](https://vitejs.dev/config/)).
 
-## Installation du projet
+- ### Installation des librairies et dépendances
 
-```sh
-npm install
-```
+  À la racine du projet, tapez la commande `npm install` pour installer les dépendances du projet, lesquelles sont :
+
+    - ``Vue``, Le framework frontend utilisé, avec `vue-router` pour la gestion des routes
+    - ``vue-multiselect``, librairie permettant la sélection d'éléments multiples de manière réactive
+    - ``pdf-lib``, prend en charge la création de fichiers PDF pour la facturation (voir CDC)
+    - ``qalendar``, calendrier compatible vue 3 et personnalisable
+    - ``headlessUI``, pour des composants pré-fabriqués
+    - ``heroicons``, pour l'affichage d'icônes
+    - ``vue3-toastify``, pour faire les notifications de l'application
 
 ### Démarrer le serveur de Dev (HotModuleReplacement)
 
