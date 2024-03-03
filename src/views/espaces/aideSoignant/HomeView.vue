@@ -13,7 +13,7 @@ import AppMenu from '@/components/AppMenu.vue'
 
 <style scoped>
 main {
-  height: 90svh;
+  height: 90dvh;
   width: 100%;
   padding: 1.075rem;
   overflow-y: scroll;
