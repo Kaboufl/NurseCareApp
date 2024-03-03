@@ -13,12 +13,23 @@ import {
 // @ts-ignore
 import VueMultiSelect from 'vue-multiselect'
 import { CheckIcon, ChevronUpDownIcon, TrashIcon } from '@heroicons/vue/20/solid'
+import { toast } from 'vue3-toastify'
 
 const props = defineProps({
-  selectedIntervention: Object as () => Intervention
+  selectedIntervention: Object as () => Intervention | null
 })
 
-const emit = defineEmits(['cancel', 'interventionAdded'])
+const emit = defineEmits(['cancel', 'interventionAdded', 'interventionUpdated'])
+
+const isEditable: ComputedRef<boolean> = computed(() => {
+  const today = new Date().getTime()
+  const interventionDate = new Date(intervention.value.date).getTime()
+  console.log(interventionDate > today, intervention.value.date_facture)
+  return (
+    !intervention.value.id ||
+    ( interventionDate > today && intervention.value.date_facture === null )
+  )
+})
 
 //@ts-ignore
 const intervention: Ref<Intervention> = ref({})
@@ -27,18 +38,31 @@ const newIntervention: ComputedRef<Intervention> = computed(() => {
   const newIntervention: Intervention = {
     ...intervention.value,
     etat_facture: '',
-    lieu: intervention.value.patient.adresse
+    lieu: intervention.value.patient ? intervention.value.patient.adresse : '',
+    prestations: []
   }
   return newIntervention
 })
 
 onMounted(() => {
-  if (props.selectedIntervention && props.selectedIntervention.id !== 0) {
-    intervention.value = { ...props.selectedIntervention }
-  }
+  
   getAllPatients()
   getAllInfirmiers()
-  getSoins()
+  getSoins().then(() => {
+    
+    if (props.selectedIntervention && props.selectedIntervention.id !== 0) {
+      intervention.value = { ...props.selectedIntervention }
+      const oldSoins = props.selectedIntervention.prestations.map((prestation: Prestation) => {
+        const soin = soins.value.find((soin: Soin) => soin.id === prestation.soinId )
+        return soin
+      })
+      selectedSoins.value = oldSoins.filter((soin: Soin | undefined) => soin !== undefined) as Soin[];
+    } else {
+      const NewIntervention = newIntervention.value
+      intervention.value = NewIntervention
+    }
+    console.log(isEditable.value)
+  })
 })
 
 const patientsQuery = ref('')
@@ -66,7 +90,6 @@ async function getAllPatients() {
   const request = await fetch('/api/secretaire/patients')
   const response = await request.json()
   patients.value = response
-  console.log(patients.value)
 }
 
 const infirmiers: Ref<Personnel[]> = ref([])
@@ -75,8 +98,6 @@ async function getAllInfirmiers() {
   const request = await fetch('/api/secretaire/infirmiers')
   const response = await request.json()
   infirmiers.value = response
-  console.log(`${infirmiers.value.length} aide soignants chargés :`)
-  console.table(infirmiers.value)
 }
 
 const soins: Ref<Soin[]> = ref([])
@@ -86,14 +107,12 @@ async function getSoins() {
   const request = await fetch('/api/secretaire/soins')
   const response = await request.json()
   soins.value = response
-  console.log(`${soins.value.length} soins chargés :`)
-  console.table(soins.value)
 }
 
 const prestations = computed(() => {
-  const prestations = selectedSoins.value.map((soin) => {
+  const prestations = selectedSoins.value.map((soin, index) => {
     const prestation: Prestation = {
-      id: 0,
+      id: intervention.value.prestations[index] ? intervention.value.prestations[index].id : 0,
       commentaire: '',
       soin: { ...soin }
     }
@@ -104,21 +123,74 @@ const prestations = computed(() => {
 
 const selectedPatient: Ref<Patient> = ref(patients.value[0])
 
+async function integrerIntervention() {
+  intervention.value.date_integration = new Date().toISOString();
+  await saveIntervention()
+}
+
 async function saveIntervention() {
   intervention.value.prestations = prestations.value
-  const inter = newIntervention.value
-  const request = await fetch('/api/secretaire/intervention', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(inter)
-  })
-  const response = await request.json()
+  if(!intervention.value.id) {
 
-  emit('interventionAdded')
+    try {
+      
+      const inter = newIntervention.value
+      const request = await fetch('/api/secretaire/intervention', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inter)
+      })
 
-  console.log(response, inter)
+      const response = await request.json()
+      
+      console.log(response, inter)
+      emit('interventionAdded') // penser à renommer l'évènement
+      return toast.success("Intervention ajoutée")
+      
+    } catch (error) {
+      
+    }
+  } else {
+    const updatedIntervention: Partial<Intervention> = { 
+      date: intervention.value.date,
+      date_facture: '',
+      etat_facture: '',
+      date_integration: intervention.value.date_integration,
+      factureId: 0,
+      lieu: intervention.value.lieu,
+      patientId: intervention.value.patient!.id,
+      personnelId: intervention.value.personnel!.id,
+      prestations: intervention.value.prestations.map((prestation: Prestation) => {
+        return { ...prestation, soinId: prestation.soin.id }
+      })
+     }
+     const request = await fetch(`/api/secretaire/intervention/${intervention.value.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedIntervention)
+     })
+
+     if(request.status === 404) {
+      emit('cancel')
+      return toast.error("Cette intervention n'existe pas !")
+     }
+
+     if(request.status === 500) {
+      emit('cancel')
+      return toast.error("Une erreur est survenue")
+     }
+
+     const response = await request.json()
+
+     console.log(response, updatedIntervention)
+     emit('interventionUpdated')
+     return toast.success("Intervention mise à jour")
+  }
+
 }
 </script>
 
@@ -134,7 +206,9 @@ async function saveIntervention() {
             type="date"
             id="date"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            v-model="intervention.date"
+            v-bind:disabled="!isEditable"
+            :value="intervention.date && (typeof intervention.date === 'string' ? new Date(intervention.date) : intervention.date).toISOString().substring(0, 10)"
+            @input="intervention.date = ($event?.target as HTMLInputElement)?.value"
           />
         </div>
         <div class="col-start-1">
@@ -142,7 +216,7 @@ async function saveIntervention() {
             >Patient</label
           >
 
-          <Combobox v-model="intervention.patient">
+          <Combobox v-model="intervention.patient" v-bind:disabled="!isEditable">
             <div class="relative">
               <div class="relative w-full cursor-default overflow-hidden text-left">
                 <ComboboxInput
@@ -209,7 +283,7 @@ async function saveIntervention() {
             >Assigner un(e) infirmier(ière)</label
           >
 
-          <Combobox v-model="intervention.personnel">
+          <Combobox v-model="intervention.personnel" v-bind:disabled="!isEditable">
             <div class="relative">
               <div class="relative w-full cursor-default overflow-hidden text-left">
                 <ComboboxInput
@@ -286,6 +360,7 @@ async function saveIntervention() {
               selected-label="Sélectionné"
               label="libelle"
               track-by="id"
+              v-if="isEditable"
             >
               <template v-slot:selection="{ values, isOpen }">
                 <span class="multiselect__single" v-if="values.length" v-show="!isOpen"
@@ -310,6 +385,7 @@ async function saveIntervention() {
               <li v-for="prestation in prestations" :key="prestation.soin.id">
                 <span>{{ prestation.soin.libelle }} - {{ prestation.soin.prix + ' €' }}</span>
                 <button
+                v-if="isEditable"
                   type="button"
                   @click="
                     selectedSoins = selectedSoins.filter((soin) => soin.id !== prestation.soin.id)
@@ -329,14 +405,23 @@ async function saveIntervention() {
           class="px-6 py-3 rounded text-white font-medium bg-red-500"
           @click="$emit('cancel')"
         >
-          Annuler
+          {{ isEditable ? 'Annuler' : "Fermer" }}
         </button>
         <button
+          v-if="isEditable"
           type="button"
           class="px-6 py-3 rounded text-white font-medium bg-primary"
           @click="saveIntervention"
         >
           Enregistrer
+        </button>
+        <button
+          v-if="intervention.id !== 0 && intervention.date_facture != null && intervention.date_integration === null"
+          type="button"
+          class="px-6 py-3 rounded text-white font-medium bg-cyan-500"
+          @click="integrerIntervention"
+        >
+          Intégrer
         </button>
       </div>
     </form>
