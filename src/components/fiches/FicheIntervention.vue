@@ -61,7 +61,6 @@ onMounted(() => {
       const NewIntervention = newIntervention.value
       intervention.value = NewIntervention
     }
-    console.log(isEditable.value)
   })
 })
 
@@ -111,8 +110,9 @@ async function getSoins() {
 
 const prestations = computed(() => {
   const prestations = selectedSoins.value.map((soin, index) => {
+    const existPrestation = intervention.value.prestations.find((prestation: Prestation) => prestation.soinId === soin.id)
     const prestation: Prestation = {
-      id: intervention.value.prestations[index] ? intervention.value.prestations[index].id : 0,
+      id: existPrestation ? existPrestation.id : 0,
       commentaire: '',
       soin: { ...soin }
     }
@@ -155,7 +155,7 @@ async function saveIntervention() {
   } else {
     const updatedIntervention: Partial<Intervention> = { 
       date: intervention.value.date,
-      date_facture: '',
+      date_facture: null,
       etat_facture: '',
       date_integration: intervention.value.date_integration,
       factureId: 0,
