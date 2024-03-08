@@ -24,12 +24,10 @@ async function updateUserProfile() {
   const response = await request.json()
   const { user } = response
 
-  console.log(response)
   return (userProfile.value = user)
 }
 
 onMounted(() => {
-  console.log(userProfile.value)
   if (Object.keys(userProfile.value).length === 0) {
     updateUserProfile()
   }

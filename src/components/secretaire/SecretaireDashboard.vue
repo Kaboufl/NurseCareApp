@@ -18,7 +18,7 @@ const { userProfile } = inject('userProfile') as {
 }
 
 onMounted(() => {
-  console.log(userProfile.value)
+  
 })
 </script>
 

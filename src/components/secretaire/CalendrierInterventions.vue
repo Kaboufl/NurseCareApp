@@ -95,8 +95,6 @@ async function getInterventions() {
 
   const response = await request.json()
   interventions.value = response
-
-  console.log(response)
 }
 
 onMounted(() => {
@@ -181,7 +179,7 @@ const calendarConfig = ref({
             class="container min-h-[75vh] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
           >
             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-              >Ajouter une intervention</DialogTitle
+              >{{ selectedIntervention?.id == 0 ? "Ajouter" : "Modifier" }} une intervention</DialogTitle
             >
             <FicheIntervention
               @cancel="setShowFicheIntervention(false)"

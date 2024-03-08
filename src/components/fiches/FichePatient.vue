@@ -58,7 +58,7 @@ async function savePatient() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newPatient)
+        body: JSON.stringify({ ...newPatient, tel: String(newPatient.tel)})
       })
 
       const response = await request.json()
@@ -104,7 +104,7 @@ async function savePatient() {
 
 <template>
   <section>
-    <form @submit.prevent="console.log('submit')" class="flex flex-col md:grid gap-6 mb-6 p-2 px-4 md:grid-cols-2">
+    <form @submit.prevent="savePatient" class="container grid gap-6 mb-6 p-2 px-4" :class="patient.id == 0 ? 'grid-cols-1' : 'grid-cols-2'">
         
       <div>
           <label for="nom" class="block mb-2 text-sm font-medium text-gray-900">Nom</label>
@@ -155,6 +155,10 @@ async function savePatient() {
             v-model="patient.mail"
           />
         </div>
+
+        <span class="flex flex-row w-full justify-center">
+          <button>Enregistrer</button>
+        </span>
     </form>
   </section>
 </template>

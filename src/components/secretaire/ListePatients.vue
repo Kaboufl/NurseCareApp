@@ -10,11 +10,34 @@ import {
   DialogDescription,
   TransitionRoot
 } from '@headlessui/vue'
+import { useConfirm } from 'v3confirm'
 import type { Personnel, InterventionQalendar, Intervention, Patient } from '@/models'
 import FichePatient from '@/components/fiches/FichePatient.vue'
 import { toast } from 'vue3-toastify'
+import { usePromisedModal } from '../utils/usePromisedModal'
 
 const showFichePatient: Ref<boolean> = ref(false)
+
+const confirm: any = useConfirm()
+
+const confirmDelete = usePromisedModal<boolean>();
+
+async function deletePatient(patientId: number) {
+
+  const confirmer = await confirmDelete.ask()
+
+  if(confirmer) {
+    
+      const request = await fetch(`api/secretaire/patients/${patientId}`, {method: 'DELETE'})
+      const response = await request.json()
+      if (!request.ok) {
+        return toast.error("Une erreur est survenue")
+      }
+      toast.success(response.message)
+      getPatients()
+  } 
+}
+
 
 function setShowFichePatient(state: boolean = false) {
   showFichePatient.value = state
@@ -26,15 +49,17 @@ async function getPatients() {
   try {
     const request = await fetch(`api/secretaire/patients`)
     const response = await request.json()
-    console.table(response)
     patients.value = response
   } catch (error) {
     toast.error("Erreur lors de la récupération des profils patients !")
   }
 }
 
+
 onMounted(async () => {
-  console.log(await getPatients())
+  if(!patients.value.length) {
+    getPatients()
+  }
 })
 
 
@@ -104,7 +129,7 @@ onMounted(async () => {
             </th>
             <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex flex-row justify-around items-center">
               <button>Modifier</button>
-              <button>Supprimer</button>
+              <button @click="deletePatient(patient.id)">Supprimer</button>
             </th>
           </tr>
         </tbody>
@@ -130,11 +155,41 @@ onMounted(async () => {
             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
               >Ajouter un patient</DialogTitle
             >
-            <FichePatient />
+            <FichePatient @patient-added="$nextTick(() => { getPatients(); }); setShowFichePatient(false)" @patient-updated="setShowFichePatient(false);getPatients" />
           </DialogPanel>
         </div>
       </Dialog>
     </TransitionRoot>
+    <TransitionRoot
+      :show="confirmDelete.visible.value"
+      as="template"
+      enter="duration-200 ease-out"
+      enter-from="opacity-0"
+      enter-to="opacity-100"
+      leave="duration-200 ease-in"
+      leave-from="opacity-100"
+      leave-to="opacity-0"
+    >
+      <Dialog @close="confirmDelete.tell(false)" class="relative z-50">
+        <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel
+          as="div"
+          class="space-y-3 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+          >
+          <DialogTitle as="h3" class="text-lg text-center font-medium leading-6 text-gray-900"
+            >Supprimer le patient ?</DialogTitle
+          >
+          <DialogDescription as="span" class="w-full flex flex-row justify-around gap-4">
+            <button @click="confirmDelete.tell(false)" class="px-3 py-1 rounded bg-red-400">Annuler</button>
+            <button @click="confirmDelete.tell(true)" class="px-3 py-1 rounded bg-blue-400">Confirmer</button>
+          </DialogDescription>
+            
+          </DialogPanel>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+      <div id="confirm"></div>
     </div>
 </template>
 

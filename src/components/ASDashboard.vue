@@ -151,7 +151,6 @@ const config = ref({
 const interventionVisible = ref(false)
 
 function showInterventionDetail(event: any) {
-  console.log(event)
   try {
     const interventionTrouvee = interventions.value.find((intervention: Intervention) => intervention.id === event.id)
     if (!interventionTrouvee) {

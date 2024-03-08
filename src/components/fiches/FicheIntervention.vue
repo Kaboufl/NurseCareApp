@@ -135,6 +135,8 @@ async function saveIntervention() {
     try {
       
       const inter = newIntervention.value
+      inter.prestations = prestations.value
+      console.log(inter)
       const request = await fetch('/api/secretaire/intervention', {
         method: 'POST',
         headers: {
@@ -191,6 +193,19 @@ async function saveIntervention() {
      return toast.success("Intervention mise à jour")
   }
 
+}
+
+async function deleteIntervention() {
+  const interventionId = intervention.value.id
+  const request = await fetch(`api/secretaire/interventions/${interventionId}`, { method: 'DELETE'})
+  const response = await request.json()
+  if(!request.ok) {
+    console.error(response.message)
+    return toast.error(response.message)
+  }
+
+  toast.success(response.message)
+  emit('interventionUpdated')
 }
 </script>
 
@@ -402,7 +417,7 @@ async function saveIntervention() {
       <div class="w-full flex flex-row gap-4 justify-center">
         <button
           type="button"
-          class="px-6 py-3 rounded text-white font-medium bg-red-500"
+          class="px-6 py-3 rounded text-white font-medium bg-slate-400"
           @click="$emit('cancel')"
         >
           {{ isEditable ? 'Annuler' : "Fermer" }}
@@ -422,6 +437,14 @@ async function saveIntervention() {
           @click="integrerIntervention"
         >
           Intégrer
+        </button>
+        <button
+          v-if="isEditable && selectedIntervention?.id !== 0"
+          type="button"
+          class="px-6 py-3 rounded text-white font-medium bg-red-500"
+          @click="deleteIntervention"
+        >
+          Supprimer l'intervention
         </button>
       </div>
     </form>
