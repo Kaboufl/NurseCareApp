@@ -146,6 +146,10 @@ async function saveIntervention() {
       })
 
       const response = await request.json()
+
+      if (!request.ok) {
+        return toast.error(response.message)
+      }
       
       console.log(response, inter)
       emit('interventionAdded') // penser à renommer l'évènement

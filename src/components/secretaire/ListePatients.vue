@@ -10,15 +10,13 @@ import {
   DialogDescription,
   TransitionRoot
 } from '@headlessui/vue'
-import { useConfirm } from 'v3confirm'
+import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import type { Personnel, InterventionQalendar, Intervention, Patient } from '@/models'
 import FichePatient from '@/components/fiches/FichePatient.vue'
 import { toast } from 'vue3-toastify'
 import { usePromisedModal } from '../utils/usePromisedModal'
 
 const showFichePatient: Ref<boolean> = ref(false)
-
-const confirm: any = useConfirm()
 
 const confirmDelete = usePromisedModal<boolean>();
 
@@ -31,6 +29,9 @@ async function deletePatient(patientId: number) {
       const request = await fetch(`api/secretaire/patients/${patientId}`, {method: 'DELETE'})
       const response = await request.json()
       if (!request.ok) {
+        if (request.status == 409) {
+          return toast.warning(response.message)
+        }
         return toast.error("Une erreur est survenue")
       }
       toast.success(response.message)
@@ -39,11 +40,25 @@ async function deletePatient(patientId: number) {
 }
 
 
-function setShowFichePatient(state: boolean = false) {
+function setShowFichePatient(state: boolean = false, idPatient: number|null = null) {
+  if(idPatient != null) {
+    selectedPatient.value = patients.value.find(patient => patient.id == idPatient) ?? null
+  } else {
+    selectedPatient.value = {
+      id: 0,
+      nom: "",
+      prenom: "",
+      tel: "",
+      mail: "",
+      adresse: ""
+    }
+  }
   showFichePatient.value = state
 }
 
 const patients: Ref<Patient[]> = ref([])
+
+const selectedPatient: Ref<Patient|null> = ref(null)
 
 async function getPatients() {
   try {
@@ -127,9 +142,13 @@ onMounted(async () => {
             <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
               {{ patient.mail }}
             </th>
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex flex-row justify-around items-center">
-              <button>Modifier</button>
-              <button @click="deletePatient(patient.id)">Supprimer</button>
+            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex flex-row justify-evenly items-center">
+              <button class="h-fit w-fit p-2 rounded-full bg-pink-100" @click="setShowFichePatient(true, patient.id)">
+                <PencilSquareIcon class="w-6 h-6 text-primary" />
+              </button>
+              <button class="h-fit w-fit p-2 rounded-full bg-pink-100" @click="deletePatient(patient.id)">
+                <TrashIcon class="w-6 h-6 text-primary" /> 
+              </button>
             </th>
           </tr>
         </tbody>
@@ -155,7 +174,10 @@ onMounted(async () => {
             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
               >Ajouter un patient</DialogTitle
             >
-            <FichePatient @patient-added="$nextTick(() => { getPatients(); }); setShowFichePatient(false)" @patient-updated="setShowFichePatient(false);getPatients" />
+            <FichePatient 
+              :patient="selectedPatient" 
+              @patient-added="$nextTick(() => { getPatients(); }); setShowFichePatient(false)" 
+              @patient-updated="$nextTick(() => { getPatients(); }); setShowFichePatient(false)" />
           </DialogPanel>
         </div>
       </Dialog>
@@ -189,7 +211,6 @@ onMounted(async () => {
         </div>
       </Dialog>
     </TransitionRoot>
-      <div id="confirm"></div>
     </div>
 </template>
 

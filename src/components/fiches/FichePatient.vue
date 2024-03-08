@@ -31,10 +31,9 @@ const patient: Ref<Patient> = ref({
 })
 
 onMounted(() => {
-  if(props.patient)
-    patient.value = props.patient
-    console.log(patient.value)
-  
+  if(props.patient != null) {
+    patient.value = { ...props.patient }  
+  }
 })
 
 
@@ -71,32 +70,39 @@ async function savePatient() {
       
     }
   } else {
-    const updatedPatient: Partial<Patient> = { 
-      ...patient.value
-     }
-     const request = await fetch(`/api/secretaire/intervention/${patient.value.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedPatient)
-     })
-
-     if(request.status === 404) {
-      emit('cancel')
-      return toast.error("Ce patient n'existe pas !")
-     }
-
-     if(request.status === 500) {
-      emit('cancel')
-      return toast.error("Une erreur est survenue")
-     }
-
-     const response = await request.json()
-
-     console.log(response, updatedPatient)
-     emit('patientUpdated')
-     return toast.success("Patient mis à jour")
+    try {
+      const updatedPatient: Patient = { 
+        ...patient.value
+      }
+      const request = await fetch(`/api/secretaire/patients/${patient.value.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedPatient)
+      })
+      
+      const response = await request.json()
+      console.log(response)
+      
+      if(request.status === 404) {
+        emit('cancel')
+        return toast.warning("Ce patient n'existe pas !")
+      }
+      
+      if(request.status === 500) {
+        emit('cancel')
+        return toast.error("Une erreur est survenue")
+      }
+      
+      
+      console.log(response, updatedPatient)
+      emit('patientUpdated', updatedPatient)
+      return toast.success("Patient mis à jour")
+      
+    } catch (error) {
+      toast.error("Vérifiez votre connexion réseau")
+    }
   }
 
 }
@@ -104,9 +110,9 @@ async function savePatient() {
 
 <template>
   <section>
-    <form @submit.prevent="savePatient" class="container grid gap-6 mb-6 p-2 px-4" :class="patient.id == 0 ? 'grid-cols-1' : 'grid-cols-2'">
+    <form @submit.prevent="savePatient" class="container grid gap-6 mb-6 p-2 px-4" :class="patient.id == 0 ? 'grid-cols-1' : 'grid-cols-1'">
         
-      <div>
+      <div class="col-start-1">
           <label for="nom" class="block mb-2 text-sm font-medium text-gray-900">Nom</label>
           <input
             type="text"
@@ -116,7 +122,7 @@ async function savePatient() {
           />
         </div>
 
-        <div>
+        <div class="col-start-1">
           <label for="prenom" class="block mb-2 text-sm font-medium text-gray-900">Prénom</label>
           <input
             type="text"
@@ -126,7 +132,7 @@ async function savePatient() {
           />
         </div>
 
-        <div>
+        <div class="col-start-1">
           <label for="adresse" class="block mb-2 text-sm font-medium text-gray-900">Adresse</label>
           <input
             type="text"
@@ -136,7 +142,7 @@ async function savePatient() {
           />
         </div>
 
-        <div>
+        <div class="col-start-1">
           <label for="tel" class="block mb-2 text-sm font-medium text-gray-900">Téléphone</label>
           <input
             type="number"
@@ -146,7 +152,7 @@ async function savePatient() {
           />
         </div>
         
-        <div>
+        <div class="col-start-1">
           <label for="mail" class="block mb-2 text-sm font-medium text-gray-900">Adresse e-mail</label>
           <input
             type="email"
@@ -156,7 +162,7 @@ async function savePatient() {
           />
         </div>
 
-        <span class="flex flex-row w-full justify-center">
+        <span class="flex flex-row w-full justify-center col-start-1 col-span-2">
           <button>Enregistrer</button>
         </span>
     </form>
