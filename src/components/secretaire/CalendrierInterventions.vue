@@ -16,6 +16,7 @@ import FicheIntervention from '@/components/fiches/FicheIntervention.vue'
 const interventions: Ref<Intervention[]> = ref([])
 
 const showFicheIntervention: Ref<boolean> = ref(false)
+const selectedIntervention: Ref<Intervention|null> = ref(null)
 const newIntervention: Ref<Intervention> = ref({
   id: 0,
   date: '2024-02-22',
@@ -31,10 +32,15 @@ const newIntervention: Ref<Intervention> = ref({
     tel: '',
     mail: ''
   },
-  prestations: []
+  prestations: [],
+  personnelId: 0,
+  patientId: 0
 })
 
-function setshowFicheIntervention(value: boolean) {
+function setShowFicheIntervention(value: boolean, intervention: Intervention | null = null) {
+  if (intervention) {
+    selectedIntervention.value = intervention
+  }
   showFicheIntervention.value = value
 }
 
@@ -73,7 +79,7 @@ const events = computed(() => {
       id: intervention.id,
       description: `${intervention.prestations?.length} prestation(s)`,
       prestations: intervention.prestations,
-      patient: intervention.patient
+      patient: intervention.patient!
     }
   })
 })
@@ -89,8 +95,6 @@ async function getInterventions() {
 
   const response = await request.json()
   interventions.value = response
-
-  console.log(response)
 }
 
 onMounted(() => {
@@ -137,7 +141,7 @@ const calendarConfig = ref({
   <div class="w-full max-h-full conteneur-interventions is-light-mode">
     <header class="w-full flex flex-row p-2 gap-2">
       <button
-        @click="setshowFicheIntervention(true)"
+        @click="setShowFicheIntervention(true, newIntervention)"
         class="w-fit h-fit flex flex-row gap-2 items-center rounded-md bg-blue-400 text-white font-bold px-4 py-2"
       >
         <svg
@@ -155,7 +159,7 @@ const calendarConfig = ref({
     </header>
 
     <section class="conteneur-calendrier">
-      <Qalendar :config="calendarConfig" :events="events" />
+      <Qalendar :config="calendarConfig" :events="events" @event-was-clicked="(e: any) => setShowFicheIntervention(true, e.clickedEvent)" />
     </section>
     <TransitionRoot
       :show="showFicheIntervention"
@@ -167,7 +171,7 @@ const calendarConfig = ref({
       leave-from="opacity-100"
       leave-to="opacity-0"
     >
-      <Dialog @close="setshowFicheIntervention" class="relative z-50">
+      <Dialog @close="setShowFicheIntervention" class="relative z-50">
         <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
@@ -175,17 +179,23 @@ const calendarConfig = ref({
             class="container min-h-[75vh] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
           >
             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-              >Ajouter une intervention</DialogTitle
+              >{{ selectedIntervention?.id == 0 ? "Ajouter" : "Modifier" }} une intervention</DialogTitle
             >
             <FicheIntervention
-              @cancel="setshowFicheIntervention(false)"
+              @cancel="setShowFicheIntervention(false)"
               @intervention-added="
                 () => {
-                  setshowFicheIntervention(false)
+                  setShowFicheIntervention(false)
                   getInterventions()
                 }
               "
-              :selected-intervention="newIntervention"
+              @intervention-updated="
+                () => {
+                  setShowFicheIntervention(false)
+                  getInterventions()
+                }
+              "
+              :selected-intervention="selectedIntervention"
             />
           </DialogPanel>
         </div>

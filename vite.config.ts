@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     port: 8080,
     hmr: {
-      host: '127.0.0.1',
+      host: 'localhost',
       port: 8081
     },
     proxy: {

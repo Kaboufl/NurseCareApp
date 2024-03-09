@@ -9,6 +9,8 @@ import {
   DisclosureButton,
   DisclosurePanel
 } from '@headlessui/vue'
+import { toast } from 'vue3-toastify'
+
 
 import type { Intervention } from '@/models';
 
@@ -37,17 +39,22 @@ async function facturer() {
   const urlfact = `api/aide-soignant/interventions/facturer/${intervention.id}`;
   // const urlmail = `/interventions/${intervention.id}/prestations/mailing`;
   try {
-    fetch(urlfact, {
+    const request = await fetch(urlfact, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         authorization: localStorage.getItem('token')!,
       },
     });
+    const response = await request.json()
+    const { message } = response
+    console.log(message)
+    toast.success("Facturation effectuée avec succès");
   } catch (error) {
     console.error('Error:', error);
+    toast.error("Erreur");
   }
-  alert("Facturation effectuée avec succès");
+  setIsOpen(false)
 }
 </script>
 
@@ -89,10 +96,10 @@ async function facturer() {
             </Disclosure>
           </div>
         </section>
+        <a v-if="intervention.date_facture === null" class="w-full text-center px-4 py-2 rounded bg-primary" @click="facturer">Facturer</a>
       </main>
-      <footer>
-        <a class="" @click="facturer">Facturer</a>
-      </footer>
+      
+      
 
       <!-- ... -->
     </DialogPanel>
