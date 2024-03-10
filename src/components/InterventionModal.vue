@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
+import { computed } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -24,8 +24,6 @@ const emit = defineEmits(['close'])
 const isOpen = computed(() => {
   return props.is_open;
 })
-
-const isDialogOpen = ref(false)
 
 function setIsOpen(value: boolean) {
   console.log(value, 'is open')
@@ -77,8 +75,8 @@ async function facturer() {
 
       <main class="w-full h-fit flex flex-col gap-2">
         <span>{{ props.intervention.prestations.length }} prestation{{
-          props.intervention.prestations.length > 1 ? 's' : ''
-        }}
+    props.intervention.prestations.length > 1 ? 's' : ''
+  }}
           à réaliser</span>
         <section
           class="h-[30dvh] bg-slate-100 border border-slate-400 rounded-lg overflow-y-scroll flex flex-col gap-2 col-span-2 row-start-2">
