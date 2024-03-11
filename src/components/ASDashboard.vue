@@ -1,26 +1,9 @@
 <script setup lang="ts">
 import { onMounted, inject, computed, ref, type Ref } from 'vue'
-import type { Personnel, Intervention, Prestation, Patient } from '@/models'
+import type { Personnel, Intervention, InterventionQalendar, Prestation, Patient } from '@/models'
 import InterventionModal from './InterventionModal.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
-
-interface InterventionQalendar extends Intervention {
-  title: string
-  with: string
-  time: {
-    start: string
-    end: string
-  }
-  color: string
-  isEditable: boolean
-  isCustom: boolean
-  id: number
-  description: string
-  prestations: Prestation[]
-  patient: Patient
-
-}
 
 const { userProfile } = inject('userProfile') as {
   userProfile: Ref<Personnel>
@@ -44,18 +27,21 @@ const selectedIntervention: Ref<Intervention> = ref({
     tel: '',
     mail: '',
   },
+  personnelId: 0,
+  patientId: 0,
   prestations: []
 })
 
 defineEmits(["showInterventionDetail", "test"])
 
-const parseDateQalendar = (dateStr: Date | string) => {
+const parseDateQalendar = (dateStr: Date | string, nthEvent: number) => {
   const date = new Date(dateStr)
+  const opening = config.value.dayBoundaries.start
 
   const year = date.getFullYear()
   const month = date.getMonth() + 1 // Months are 0-based in JavaScript
   const day = date.getDate()
-  const hours = date.getHours()
+  const hours = date.getHours() > opening ? date.getHours() : opening + 2 * nthEvent
   const endHours = hours + 2
 
   // Pad single digit month, day, and hours with a leading 0
@@ -71,19 +57,24 @@ const parseDateQalendar = (dateStr: Date | string) => {
 }
 
 const events = computed(() => {
-  return interventions.value.map((intervention: Intervention): InterventionQalendar => {
+  const todayInterventions = interventions.value.filter((intervention: Intervention) => {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const dateIntervention = new Date(intervention.date).setHours(0, 0, 0, 0)
+    return today === dateIntervention
+  })
+  return todayInterventions.map((intervention: Intervention, index): InterventionQalendar => {
     return {
       ...intervention,
       title: `${intervention.prestations?.length} prestation(s)`,
-      with: intervention.patient.nom,
-      time: parseDateQalendar(intervention.date),
+      with: intervention.patient ? intervention.patient.nom : '',
+      time: parseDateQalendar(intervention.date, index),
       color: 'green',
       isEditable: false,
       isCustom: false,
       id: intervention.id,
       description: `${intervention.prestations?.length} prestation(s)`,
       prestations: intervention.prestations,
-      patient: intervention.patient
+      patient: intervention.patient ?? null
     }
   })
 })
@@ -160,7 +151,6 @@ const config = ref({
 const interventionVisible = ref(false)
 
 function showInterventionDetail(event: any) {
-  console.log(event)
   try {
     const interventionTrouvee = interventions.value.find((intervention: Intervention) => intervention.id === event.id)
     if (!interventionTrouvee) {
@@ -176,8 +166,8 @@ function showInterventionDetail(event: any) {
 </script>
 
 <template>
-  <div class="w-full h-fit bg-white rounded-md p-2 lg:px-20">
-    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}</h2>
+  <div class="w-full h-full bg-white rounded-md p-2 lg:px-20 overflow-y-scroll">
+    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}, vous avez {{ events.length + " intervention" + (events.length > 1 ? 's' : '') }} à réaliser aujourd'hui</h2>
     <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event"
       :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
     <div class="is-light-mode">

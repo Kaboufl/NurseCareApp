@@ -8,7 +8,6 @@ function calcEventsTodayWithHours(startHour: number, endHour: number) {
   //event.start = new Date(today.getFullYear(), today.getMonth(), today.getDate(), startHour).toISOString();
   event.start = `${today.getFullYear()}-${today.getMonth() < 10 ? '0' : ''}${today.getMonth() + 1}-${today.getDate()} ${startHour < 10 ? '0' : ''}${startHour}:00`;
   event.end = `${today.getFullYear()}-${today.getMonth() < 10 ? '0' : ''}${today.getMonth() + 1}-${today.getDate()} ${endHour < 10 ? '0' : ''}${endHour}:00`;
-  console.log(event)
   return event
 }
 
