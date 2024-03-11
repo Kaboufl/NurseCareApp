@@ -7,6 +7,7 @@ import ASDashboard from '@/components/ASDashboard.vue'
 import DirDashboard from '@/components/DirDashboard.vue'
 import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
 import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
+import ListePatients from '@/components/secretaire/ListePatients.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +48,11 @@ const router = createRouter({
           path: '/interventions',
           component: CalendrierInterventions,
           name: 'CalendrierInterventions'
+        },
+        {
+          path: '/patients',
+          name: 'patients',
+          component: ListePatients
         }
       ]
     },

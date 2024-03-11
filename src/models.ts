@@ -28,10 +28,12 @@ export interface Intervention {
   lieu: string;
   factureId?: number;
   etat_facture: string;
-  date_facture: Date | string;
+  date_facture: Date | string | null;
   date_integration: Date | string;
   personnel?: Personnel;
-  patient: Patient;
+  personnelId: number;
+  patient?: Patient | null;
+  patientId: number;
   prestations: Prestation[];
 }
 
@@ -40,6 +42,7 @@ export interface Prestation {
   commentaire: string;
   intervention?: Intervention;
   soin: Soin;
+  soinId?: number;
   bonsObservation?: BonObservation[];
 }
 
@@ -95,6 +98,6 @@ export interface InterventionQalendar extends Intervention {
   id: number
   description: string
   prestations: Prestation[]
-  patient: Patient
+  patient: Patient | null
 
 }

@@ -122,7 +122,7 @@ const logOut = ref(async () => {
 <style scoped>
 header {
   width: 100%;
-  height: 10svh;
+  height: 10dvh;
   padding: 0.875rem;
   display: flex;
   flex-direction: row;

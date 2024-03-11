@@ -4,6 +4,8 @@ import { RouterView, useRouter } from 'vue-router'
 import { onMounted, provide, ref, type Ref } from 'vue'
 import type { Personnel } from '@/models'
 
+import 'vue3-toastify/dist/index.css'
+
 const userProfile: Ref<Partial<Personnel>> = ref({})
 const router = useRouter()
 
@@ -22,12 +24,10 @@ async function updateUserProfile() {
   const response = await request.json()
   const { user } = response
 
-  console.log(response)
   return (userProfile.value = user)
 }
 
 onMounted(() => {
-  console.log(userProfile.value)
   if (Object.keys(userProfile.value).length === 0) {
     updateUserProfile()
   }
