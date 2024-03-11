@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginForm from '@/components/LoginForm.vue'
 import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
 import SecretaireView from '@/views/espaces/secretaire/SecretaireView.vue'
+import DirecteurView from '@/views/espaces/directeur/DirecteurView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
-import DirHome from '@/views/espaces/aideSoignant/HomeView.vue'
 import DirDashboard from '@/components/DirDashboard.vue'
 import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
 import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
@@ -52,11 +52,8 @@ const router = createRouter({
     },
     {
       path: '/directeur',
-      component: DirHome,
+      component: DirecteurView,
       beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('token')) {
-          return next({ name: 'Connexion' })
-        }
         next()
       },
       children: [
@@ -64,7 +61,6 @@ const router = createRouter({
           path: '',
           component: DirDashboard,
           name: 'DirDashboard',
-          props: true
         }
       ]
     }

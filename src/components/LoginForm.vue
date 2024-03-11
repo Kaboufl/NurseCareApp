@@ -58,6 +58,7 @@ const login = async () => {
       updateUserProfile(response.user)
       switch (response.user.role.id) {
         case 1:
+          router.push({ name: 'DirDashboard' })
           break
 
         case 2:
