@@ -4,10 +4,10 @@ import LoginForm from '@/components/LoginForm.vue'
 import ASHome from '@/views/espaces/aideSoignant/HomeView.vue'
 import SecretaireView from '@/views/espaces/secretaire/SecretaireView.vue'
 import ASDashboard from '@/components/ASDashboard.vue'
+import InterventionDetail from '@/components/InterventionDetail.vue'
 import SecretaireDashboard from '@/components/secretaire/SecretaireDashboard.vue'
 import CalendrierInterventions from '@/components/secretaire/CalendrierInterventions.vue'
 import ListePatients from '@/components/secretaire/ListePatients.vue'
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,7 +21,6 @@ const router = createRouter({
       path: '/aide-soignant',
       component: ASHome,
       beforeEnter: (to, from, next) => {
-        
         next()
       },
       children: [
@@ -31,14 +30,18 @@ const router = createRouter({
           name: 'ASDashboard',
           props: true
         },
-        
+        {
+          path: 'interventions/:id/detail',
+          component: InterventionDetail,
+          name: 'InterventionDetail',
+          props: true
+        }
       ]
     },
     {
       path: '/secretaire',
       component: SecretaireView,
       beforeEnter: (to, from, next) => {
-        
         next()
       },
       children: [

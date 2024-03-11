@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import router from '@/router'
+import { computed, ref } from 'vue'
 import {
   Dialog,
   DialogPanel,
-  DialogTitle,
-  DialogDescription,
   Disclosure,
   DisclosureButton,
   DisclosurePanel
@@ -52,7 +51,7 @@ async function facturer() {
         authorization: localStorage.getItem('token')!,
       },
     })
-    if (response.ok && responseMail.ok) {
+    if (request.ok && responseMail.ok) {
       const { message } = response
       console.log(message)
       toast.success("Facturation effectuée avec succès");
@@ -65,6 +64,11 @@ async function facturer() {
   }
   setIsOpen(false)
 }
+
+const detail = ref(async () => {
+  router.push(`aide-soignant/interventions/${props.intervention.id}/detail`)
+})
+
 </script>
 
 <template>
@@ -106,8 +110,9 @@ async function facturer() {
             </Disclosure>
           </div>
         </section>
-        <a v-if="intervention.date_facture === null" class="w-full text-center px-4 py-2 rounded bg-primary"
-          @click="facturer">Facturer</a>
+        <button tabindex="-1" v-if="intervention.date_facture === null"
+          class="w-full text-center px-4 py-2 rounded bg-primary" @click="facturer">Facturer</button>
+        <button class="w-full text-center px-4 py-2 rounded bg-primary" @click="detail">Détail</button>
       </main>
 
 

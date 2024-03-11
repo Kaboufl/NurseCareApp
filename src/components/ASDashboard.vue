@@ -60,7 +60,7 @@ const events = computed(() => {
   const todayInterventions = interventions.value.filter((intervention: Intervention) => {
     const today = new Date().setHours(0, 0, 0, 0);
     const dateIntervention = new Date(intervention.date).setHours(0, 0, 0, 0)
-    return today === dateIntervention
+    return today === dateIntervention || true
   })
   return todayInterventions.map((intervention: Intervention, index): InterventionQalendar => {
     return {
@@ -167,11 +167,13 @@ function showInterventionDetail(event: any) {
 
 <template>
   <div class="w-full h-full bg-white rounded-md p-2 lg:px-20 overflow-y-scroll">
-    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}, vous avez {{ events.length + " intervention" + (events.length > 1 ? 's' : '') }} à réaliser aujourd'hui</h2>
+    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}, vous avez {{ events.length +
+      " intervention" + (events.length > 1 ? 's' : '') }} à réaliser aujourd'hui</h2>
     <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event"
       :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
     <div class="is-light-mode">
-      <Qalendar :config="config" :events="events" @event-was-clicked="(e: any) => showInterventionDetail(e.clickedEvent)">
+      <Qalendar :config="config" :events="events"
+        @event-was-clicked="(e: any) => showInterventionDetail(e.clickedEvent)">
 
       </Qalendar>
     </div>
