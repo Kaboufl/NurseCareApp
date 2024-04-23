@@ -68,7 +68,7 @@ async function facturer() {
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
       </button>
-      <DialogTitle>Complete your order</DialogTitle>
+      <DialogTitle>Détails de la prestation</DialogTitle>
 
       <main class="w-full h-fit flex flex-col gap-2">
         <span>{{ props.intervention.prestations.length }} prestation{{
