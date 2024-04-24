@@ -7,19 +7,21 @@ import {
   DialogDescription,
   Disclosure,
   DisclosureButton,
-  DisclosurePanel
+  DisclosurePanel,
+  TransitionRoot
 } from '@headlessui/vue'
 import { toast } from 'vue3-toastify'
 
 
 import type { Intervention } from '@/models';
+import commentairePrestation from '@/components/commentairePrestation.vue';
 
 const props = defineProps<{
   is_open: boolean,
   intervention: Intervention
 }>()
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'update'])
 
 
 
@@ -56,11 +58,46 @@ async function facturer() {
   }
   setIsOpen(false)
 }
+
+async function updateCommentairePrestation(idPrestation: Number, commentaire: String) {
+  const url = `api/aide-soignant/prestations/${idPrestation}/commentaire`;
+  console.log(commentaire)
+  try {
+    const request = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'commentaire': commentaire
+      })
+    });
+    const response = await request.json();
+    const { message } = response;
+    console.log(message);
+    toast.success(message);
+    emit('update');
+  } catch(error) {
+    console.error("Error :", error);
+    toast.error("Impossible de mettre à jour la prestation");
+  }
+  setIsOpen(false)
+}
 </script>
 
 <template>
-  <Dialog @initialFocus.prevent="Dialog" :open="isOpen" @close="setIsOpen"
+  <TransitionRoot
+      :show="isOpen"
+      enter="transition duration-100 ease-out"
+      enterFrom="transform scale-95 opacity-0"
+      enterTo="transform scale-100 opacity-100"
+      leave="transition duration-75 ease-out"
+      leaveFrom="transform scale-100 opacity-100"
+      leaveTo="transform scale-95 opacity-0"
+  >
+  <Dialog @initialFocus.prevent="Dialog" @close="setIsOpen"
     class="fixed z-50 inset-0 flex w-screen items-center justify-center p-4">
+    <div class="fixed inset-0 blur-md bg-black/30" aria_hidden="true"></div>
 
     <DialogPanel class="relative w-full h-fit shadow-md border-2 p-4 border-primary rounded bg-white container">
       <button tabindex="-1" class="tblur absolute top-2 right-2" @click="setIsOpen(false)">
@@ -90,14 +127,14 @@ async function facturer() {
 
               </DisclosureButton>
               <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500 flex flex-row">
-                {{ prestation.commentaire }}
+              <commentairePrestation :prestation="prestation" @updateCommentaire="(idPrestation, commentaire) => updateCommentairePrestation(idPrestation, commentaire)"></commentairePrestation>
               </DisclosurePanel>
 
 
             </Disclosure>
           </div>
         </section>
-        <a v-if="intervention.date_facture === null" class="w-full text-center px-4 py-2 rounded bg-primary" @click="facturer">Facturer</a>
+        <a v-if="!intervention.date_facture" class="w-full text-center px-4 py-2 rounded bg-primary" @click="facturer">Facturer</a>
       </main>
       
       
@@ -105,4 +142,5 @@ async function facturer() {
       <!-- ... -->
     </DialogPanel>
   </Dialog>
+  </TransitionRoot>
 </template>
