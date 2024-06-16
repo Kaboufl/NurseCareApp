@@ -2,6 +2,7 @@
 import { onMounted, inject, computed, ref, type Ref } from 'vue'
 import type { Personnel, Intervention, InterventionQalendar, Prestation, Patient } from '@/models'
 import InterventionModal from './InterventionModal.vue'
+import InterventionCard from './InterventionCard.vue'
 // @ts-ignore
 import { Qalendar } from 'qalendar'
 
@@ -60,7 +61,7 @@ const events = computed(() => {
   const todayInterventions = interventions.value.filter((intervention: Intervention) => {
     const today = new Date().setHours(0, 0, 0, 0);
     const dateIntervention = new Date(intervention.date).setHours(0, 0, 0, 0)
-    return today === dateIntervention
+    return today === dateIntervention || true
   })
   return todayInterventions.map((intervention: Intervention, index): InterventionQalendar => {
     return {
@@ -82,18 +83,19 @@ const events = computed(() => {
 //console.log(events.value)
 
 onMounted(async () => {
-  //console.log(userProfile)
+  getInterventions()
+})
 
+async function getInterventions() {
   try {
     const request = await fetch(`api/aide-soignant/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: localStorage.getItem('token')!
       }
-    })
+    }); 
     if (request.status !== 200) {
-      throw new Error('Erreur')
+      throw new Error("Erreur")
     }
     const response = await request.json()
     userProfile.value = {
@@ -107,11 +109,10 @@ onMounted(async () => {
       role: response.role
     }
     interventions.value = response.interventions
-    //console.log(events.value)
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
-})
+}
 
 const config = ref({
   week: {
@@ -166,15 +167,20 @@ function showInterventionDetail(event: any) {
 </script>
 
 <template>
-  <div class="w-full h-full bg-white rounded-md p-2 lg:px-20 overflow-y-scroll">
-    <h2 class="font-nunito text-lg font-bold">Bonjour {{ userProfile.prenom }}, vous avez {{ events.length + " intervention" + (events.length > 1 ? 's' : '') }} à réaliser aujourd'hui</h2>
+  <div class="w-full h-full bg-white rounded-md p-2 lg:px-16 lg:py-4 overflow-y-scroll">
+    <h2 class="w-fit font-nunito text-lg font-bold mx-auto">Bonjour {{ userProfile.prenom }}, vous avez {{ events.length + " intervention" + (events.length > 1 ? 's' : '') }} à réaliser aujourd'hui</h2>
     <InterventionModal :is_open="interventionVisible" @close="(event) => interventionVisible = event"
-      :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" />
-    <div class="is-light-mode">
+      :intervention="selectedIntervention" @showInterventionDetail="(e: any) => console.log(e)" @update="getInterventions()" />
+
+      <section class="w-full px-4 my-6 h-fit flex flex-col gap-4">
+        
+        <InterventionCard v-for="intervention in interventions" :intervention="intervention" :key="intervention.id" @clicked="showInterventionDetail(intervention);console.log(intervention)"></InterventionCard>
+      </section>
+    <!-- <div class="is-light-mode">
       <Qalendar :config="config" :events="events" @event-was-clicked="(e: any) => showInterventionDetail(e.clickedEvent)">
 
-      </Qalendar>
-    </div>
+      </Qalendar> 
+    </div> -->
   </div>
 </template>
 
