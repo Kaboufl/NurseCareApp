@@ -10,18 +10,18 @@ const routes: Ref<MenuItems[]> = ref([
     routeName: 'DirDashboard', // DirHome
     disabled: false
   },
-  {
-    libelle: 'Facturation',
-    routeName: 'facturation'
-  },
+  // {
+  //   libelle: 'Facturation',
+  //   routeName: 'facturation'
+  // },
   {
     libelle: 'Tableau de bord',
     routeName: 'DirDashboard'
   },
-  {
-    libelle: "Observation des stagiaires",
-    routeName: 'bonObservation'
-  }
+  // {
+  //   libelle: "Observation des stagiaires",
+  //   routeName: 'bonObservation'
+  // }
 ])
 </script>
 
