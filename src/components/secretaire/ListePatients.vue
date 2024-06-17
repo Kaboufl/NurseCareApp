@@ -81,7 +81,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-full max-h-full conteneur-interventions is-light-mode">
+  
     <header class="w-full flex flex-row p-2 gap-2">
       <button
         @click="setShowFichePatient(true)"
@@ -101,58 +101,60 @@ onMounted(async () => {
       </button>
     </header>
 
-    <section class="relative overflow-x-auto">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-6 py-3">
-              Nom
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Prénom
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Adresse
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Téléphone
-            </th>
-            <th scope="col" class="px-6 py-3">
-              E-mail
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-white border-b" v-for="patient in patients">
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-              {{ patient.nom }}
-            </th>
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-              {{ patient.prenom }}
-            </th>
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-              {{ patient.adresse }}
-            </th>
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-              {{ patient.tel }}
-            </th>
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-              {{ patient.mail }}
-            </th>
-            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex flex-row justify-evenly items-center">
-              <button class="h-fit w-fit p-2 rounded-full bg-pink-100" @click="setShowFichePatient(true, patient.id)">
-                <PencilSquareIcon class="w-6 h-6 text-primary" />
-              </button>
-              <button class="h-fit w-fit p-2 rounded-full bg-pink-100" @click="deletePatient(patient.id)">
-                <TrashIcon class="w-6 h-6 text-primary" /> 
-              </button>
-            </th>
-          </tr>
-        </tbody>
-      </table>
+    <section class="relative w-full h-[90%]">
+      <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-4 py-3">
+                Nom
+              </th>
+              <th scope="col" class="px-4 py-3">
+                Prénom
+              </th>
+              <th scope="col" class="px-4 py-3 hidden md:table-cell">
+                Adresse
+              </th>
+              <th scope="col" class="px-4 py-3 hidden md:table-cell">
+                Téléphone
+              </th>
+              <th scope="col" class="px-4 py-3 hidden md:table-cell">
+                E-mail
+              </th>
+              <th scope="col" class="px-4 py-3">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b" v-for="patient in patients" :key="patient.id">
+              <th class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                {{ patient.nom }}
+              </th>
+              <th class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                {{ patient.prenom }}
+              </th>
+              <th class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">
+                {{ patient.adresse }}
+              </th>
+              <th class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">
+                {{ patient.tel }}
+              </th>
+              <th class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">
+                {{ patient.mail }}
+              </th>
+              <th class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap flex flex-row gap-1 justify-evenly items-center">
+                <button class="h-fit w-fit p-2 rounded-full bg-pink-100" @click="setShowFichePatient(true, patient.id)">
+                  <PencilSquareIcon class="w-6 h-6 text-primary" />
+                </button>
+                <button class="h-fit w-fit p-2 rounded-full bg-pink-100" @click="deletePatient(patient.id)">
+                  <TrashIcon class="w-6 h-6 text-primary" /> 
+                </button>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
     <TransitionRoot
       :show="showFichePatient"
@@ -211,10 +213,9 @@ onMounted(async () => {
         </div>
       </Dialog>
     </TransitionRoot>
-    </div>
 </template>
 
-<style>
+<style scoped>
 .conteneur-interventions {
   display: grid;
   grid-template-rows: auto 1fr;
